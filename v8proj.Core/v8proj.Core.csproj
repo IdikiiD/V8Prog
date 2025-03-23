@@ -47,7 +47,7 @@
         <Compile Include="Constant\TempDataKeys.cs" />
         <Compile Include="Entities\User\UserEF.cs" />
         <Compile Include="Enums\Entinity\EntityStatus.cs" />
-        <Compile Include="Enums\Response.cs" />
+        <Compile Include="Enums\Response\Response.cs" />
         <Compile Include="Enums\User\AccountVerificationStatus.cs" />
         <Compile Include="Enums\User\SignUpDto.cs" />
         <Compile Include="Enums\User\SignUpStatus.cs" />
