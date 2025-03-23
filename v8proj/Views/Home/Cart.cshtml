@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Apple Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Корзина</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Товары в корзине -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-4">
+                    <div class="flex items-center justify-between">
+                        <img src="" alt="iPhone" class="w-24 h-24 object-contain">
+                        <div class="flex-1 ml-4">
+                            <h3 class="text-xl font-bold">iPhone 14 Pro</h3>
+                            <p class="text-gray-600">128GB, Space Gray</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center border rounded">
+                                <button class="px-3 py-1 hover:bg-gray-100" onclick="decrementQuantity()">-</button>
+                                <span class="px-3 py-1" id="quantity">1</span>
+                                <button class="px-3 py-1 hover:bg-gray-100" onclick="incrementQuantity()">+</button>
+                            </div>
+                            <p class="text-xl font-bold">24590 MDL</p>
+                            <button class="text-red-500 hover:text-red-700" onclick="removeItem()">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Итого -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
+                    <h2 class="text-xl font-bold mb-4">Итого</h2>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span>Товары:</span>
+                            <span id="subtotal">24590 MDL</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Доставка:</span>
+                            <span>Бесплатно</span>
+                        </div>
+                        <div class="border-t pt-2 font-bold flex justify-between">
+                            <span>Итого к оплате:</span>
+                            <span id="total">24590 MDL</span>
+                        </div>
+                    </div>
+                    <button onclick="proceedToCheckout()" class="w-full bg-black text-white px-4 py-3 rounded hover:bg-gray-800">
+                        Перейти к оформлению
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let quantity = 1;
+        const pricePerItem = 24590;
+
+        function updateTotals() {
+            const subtotal = quantity * pricePerItem;
+            document.getElementById('subtotal').textContent = subtotal + ' MDL';
+            document.getElementById('total').textContent = subtotal + ' MDL';
+        }
+
+        function incrementQuantity() {
+            quantity++;
+            document.getElementById('quantity').textContent = quantity;
+            updateTotals();
+        }
+
+        function decrementQuantity() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('quantity').textContent = quantity;
+                updateTotals();
+            }
+        }
+
+        function removeItem() {
+            if (confirm('Вы уверены, что хотите удалить этот товар?')) {
+                // Здесь можно добавить логику удаления товара
+                window.location.href = 'index.html';
+            }
+        }
+
+        function proceedToCheckout() {
+            // Здесь можно добавить переход на страницу оформления заказа
+            alert('Переход к оформлению заказа');
+        }
+    </script>
+
