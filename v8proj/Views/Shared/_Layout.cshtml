@@ -10,7 +10,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-@Html.Partial("_Header")
+@{
+    var userRole = Request.Cookies["UserRole"]?.Value ?? "Guest";
+}
+
+@if (userRole == "Admin")
+{
+    @Html.Partial("~/Views/Shared/_AdminerHeader.cshtml") <!-- Полный путь -->
+}
+else
+{
+    @Html.Partial("~/Views/Shared/_Header.cshtml") <!-- Полный путь -->
+}
 
     <main>
         @RenderBody()

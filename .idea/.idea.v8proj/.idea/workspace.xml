@@ -8,11 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="added new directory in BussinessLogic">
-      <change afterPath="$PROJECT_DIR$/v8proj/Views/AdminView/ProductManagment/ProductManagment.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_AdminLayout.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_AdminerHeader.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Controllers/AuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Controllers/AuthController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Footer.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Footer.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/AdminView/ProductManagment/ProductManagment.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/AdminView/ProductManagment.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_AdminLayout.cshtml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Layout.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/v8proj.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/v8proj.csproj" afterDir="false" />
     </list>
@@ -34,12 +35,12 @@
       </list>
     </option>
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/IdikiiD/V8Prog.git",
-    "accountId": "6c4135a4-86ab-4d2f-a6da-2865a2f70e35"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/IdikiiD/V8Prog.git&quot;,
+    &quot;accountId&quot;: &quot;6c4135a4-86ab-4d2f-a6da-2865a2f70e35&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$APPLICATION_HOME_DIR$/lib/app.jar!/resources/html5-schema/html5/common.rnc" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/620f6e7eba834c42a2f2db6b22950df6531838/01/ae383003/Object.cs" root0="FORCE_HIGHLIGHTING" />
@@ -62,26 +63,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.v8proj - IIS Express.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "demo",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "RiderNuGetOptionsPageId",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.v8proj - IIS Express.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;demo&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderNuGetOptionsPageId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlserver.localdb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlserver.localdb&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="v8proj - IIS Express" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../../../../../Program Files (x86)/IIS Express/iisexpress.exe" />
