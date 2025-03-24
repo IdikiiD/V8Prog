@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Управление товаром";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-6">Управление товаром</h1>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            <!-- Основная информация -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <!-- Название товара -->
+                    <div>
+                        <label for="productName" class="block text-sm font-medium text-gray-700">Название товара</label>
+                        <input type="text" id="productName" name="productName" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Цена -->
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700">Цена (₽)</label>
+                        <input type="number" id="price" name="price" min="0" step="0.01"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Количество -->
+                    <div>
+                        <label for="quantity" class="block text-sm font-medium text-gray-700">Количество на складе</label>
+                        <input type="number" id="quantity" name="quantity" min="0"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Категория -->
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700">Категория</label>
+                        <select id="category" name="category"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Выберите категорию</option>
+                            <option value="engine">Двигатель</option>
+                            <option value="transmission">Трансмиссия</option>
+                            <option value="suspension">Подвеска</option>
+                            <option value="brakes">Тормозная система</option>
+                            <option value="electronics">Электроника</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Загрузка фото -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Фотографии товара</label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" 
+                                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                        <span>Загрузить файл</span>
+                                        <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple>
+                                    </label>
+                                    <p class="pl-1">или перетащите</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG до 10MB</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Текущие фото -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Текущие фотографии</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="relative">
+                                <img src="#" alt="Product" class="h-24 w-24 object-cover rounded-md">
+                                <button type="button" class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Описание -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Описание товара</label>
+                <textarea id="description" name="description" rows="4"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+            </div>
+
+            <!-- Характеристики -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Характеристики</label>
+                <div id="specifications" class="space-y-2">
+                    <div class="flex gap-4">
+                        <input type="text" placeholder="Название" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <input type="text" placeholder="Значение" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <button type="button" class="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                            Удалить
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                    + Добавить характеристику
+                </button>
+            </div>
+
+            <!-- Кнопки управления -->
+            <div class="flex justify-end space-x-4 pt-4 border-t">
+                <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    Отмена
+                </button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Сохранить изменения
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <script>
+        // Добавление новой характеристики
+        document.querySelector('button[type="button"]').addEventListener('click', function() {
+            const specsContainer = document.getElementById('specifications');
+            const newSpec = document.createElement('div');
+            newSpec.className = 'flex gap-4';
+            newSpec.innerHTML = `
+                <input type="text" placeholder="Название" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <input type="text" placeholder="Значение" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <button type="button" class="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                    Удалить
+                </button>
+            `;
+            specsContainer.appendChild(newSpec);
+        });
+
+        // Удаление характеристики
+        document.getElementById('specifications').addEventListener('click', function(e) {
+            if (e.target.closest('button') && e.target.closest('button').textContent.trim() === 'Удалить') {
+                e.target.closest('.flex').remove();
+            }
+        });
+
+        // Предпросмотр загружаемых изображений
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            // Здесь можно добавить код для предпросмотра загруженных изображений
+        });
+    </script>
+}

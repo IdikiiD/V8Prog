@@ -7,7 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="" />
+    <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="added new directory in BussinessLogic">
+      <change afterPath="$PROJECT_DIR$/v8proj/Views/AdminView/ProductManagment/ProductManagment.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_AdminLayout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Footer.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Footer.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/v8proj.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/v8proj.csproj" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,12 +27,26 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="master" />
+      </list>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/IdikiiD/V8Prog.git",
+    "accountId": "6c4135a4-86ab-4d2f-a6da-2865a2f70e35"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$APPLICATION_HOME_DIR$/lib/app.jar!/resources/html5-schema/html5/common.rnc" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/620f6e7eba834c42a2f2db6b22950df6531838/01/ae383003/Object.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/620f6e7eba834c42a2f2db6b22950df6531838/20/40322529/DateTime.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/0a/e58fc1ac/LabelExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/12/9cfa7b30/UrlHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/1e/cbd16cc7/WebViewPage`1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/39/71fec76b/Controller.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/8a/636bcd40/InputExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/ce/309cf3ba/ValidationExtensions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -35,29 +57,31 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2u8dHpNEt1spCs7o8SPqErt5fKH" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.v8proj - IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;RiderNuGetOptionsPageId&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.v8proj - IIS Express.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "demo",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "RiderNuGetOptionsPageId",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlserver.localdb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlserver.localdb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="v8proj - IIS Express" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../../../../../Program Files (x86)/IIS Express/iisexpress.exe" />
@@ -103,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741729546800</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added new directory in BussinessLogic">
+      <option name="closed" value="true" />
+      <created>1742771880242</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742771880242</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +146,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Changed all , project works , all links works , we need just add new features" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed all , project works , all links works , we need just add new features" />
+    <MESSAGE value="added new directory in BussinessLogic" />
+    <option name="LAST_COMMIT_MESSAGE" value="added new directory in BussinessLogic" />
   </component>
 </project>

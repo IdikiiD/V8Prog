@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - V8 Performance </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+@Html.Partial("_Header")
+
+<main>
+    @RenderBody()
+</main>
+
+<footer class="bg-white shadow-lg mt-8">
+    @Html.Partial("_Footer")
+</footer>
+
+<script>
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        document.getElementById('profileModal').classList.remove('hidden');
+    });
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+</script>
+</body>
+</html>
+
