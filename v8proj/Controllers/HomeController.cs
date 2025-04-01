@@ -12,6 +12,8 @@ namespace v8proj.Controllers
             {
                 new eUseControl { CartName = "Mercedes", CartDescription = "Good car", CartPrice = 10000, CartImage = "https://via.placeholder.com/400x300" },
                 new eUseControl { CartName = "BMW", CartDescription = "Sporty and powerful", CartPrice = 12000, CartImage = "https://via.placeholder.com/400x300" },
+                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" },
+                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" },
                 new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" }
             };
 
@@ -46,6 +48,11 @@ namespace v8proj.Controllers
         public ActionResult Profile()
         {
             return View("~/Views/Profile/Profile.cshtml");
+        }
+        
+        public ActionResult ProductManagment()
+        {
+            return View("~/Views/AdminView/ProductManagment.cshtml");
         }
 
     }
