@@ -12,6 +12,13 @@ namespace v8proj
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            // 1. Добавляем маршрут для Админ-панели
+            routes.MapRoute(
+                name: "Admin",
+                url: "Admin/{action}/{id}",
+                defaults: new { controller = "Admin", action = "Dashboard", id = UrlParameter.Optional }
+            );
             
             routes.MapRoute(
                 name: "Auth",

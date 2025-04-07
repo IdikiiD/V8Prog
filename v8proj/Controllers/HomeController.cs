@@ -52,8 +52,8 @@ namespace v8proj.Controllers
         
         public ActionResult ProductManagment()
         {
-            return View("~/Views/AdminView/ProductManagment.cshtml");
+            return View("~/Views/Admin/ProductManagment.cshtml");
         }
-
+        
     }
 }
