@@ -14,7 +14,6 @@ namespace v8proj.Core.Entities.User
         public string Email { get; set; } = "";
         public string PasswordHash { get; set; } = "";
         public DateTime DateRegistered { get; set; } = DateTime.UtcNow;
-        
         public UserType UserType { get; set; } = UserType.User;
         public EntityStatus UserStatus { get; set; } = EntityStatus.Active;
         public AccountVerificationStatus IsVerified { get; set; } = AccountVerificationStatus.NotVerified;

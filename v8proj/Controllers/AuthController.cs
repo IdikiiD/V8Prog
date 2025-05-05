@@ -2,19 +2,25 @@ using System;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using v8proj.BissnessLogic.Interfaces.User;
+using v8proj.BissnessLogic.Interfaces.User; 
 using v8proj.Core.Constant;
 using v8proj.Core.Model.DTO.User;
+using v8proj.Core.Enums.User;   
 using v8proj.Web.Model.DTO;
+
 
 namespace v8proj.Controllers
 {
     public class AuthController : BaseControler
     {
         private readonly IAuthentificationSrevice _authService;
-
-        public AuthController(IAuthentificationSrevice authService) =>
+        private readonly IUserService _userService;
+        
+        public AuthController(IAuthentificationSrevice authService, IUserService userService) 
+        {
             _authService = authService;
+            _userService = userService; 
+        }
 
         [HttpGet]
         public async Task<ActionResult> SignIn() => await CheckTokenValidity();
@@ -23,97 +29,94 @@ namespace v8proj.Controllers
         public async Task<ActionResult> SignUp() => await CheckTokenValidity();
         
         [HttpPost]
-        public async Task<ActionResult> SignIn(SignInDto signInDto)
-        {
-            if (!ModelState.IsValid) 
-                return View(signInDto);
-            
-            var authResponse = await _authService.SignIn(signInDto);
-            
-            if (!authResponse.Data)
-            {
-                TempData[TempDataKeys.Error] = authResponse.Message;
-                return View(signInDto);
-            }
-
-            // Определяем, является ли пользователь админом
-            bool isAdmin = DetermineIfAdmin(signInDto.Email);
-
-            // Устанавливаем куки
-            SetAuthCookies(signInDto.Email, isAdmin);
-
-            return RedirectToAction("Index", "Home");
-        }
+        public async Task<ActionResult> SignIn(SignInDto signInDto) =>
+            await ProcessAuthentication(async () => await _authService.SignIn(signInDto), signInDto);
 
         [HttpPost]
-        public async Task<ActionResult> SignUp(SignUpDto signUpDto)
-        {
-            if (!ModelState.IsValid) 
-                return View(signUpDto);
-
-            var authResponse = await _authService.SignUp(signUpDto);
-            
-            if (!authResponse.Data)
-            {
-                TempData[TempDataKeys.Error] = authResponse.Message;
-                return View(signUpDto);
-            }
-
-            // Новые пользователи по умолчанию не админы
-            SetAuthCookies(signUpDto.Email, isAdmin: false);
-
-            return RedirectToAction("Index", "Home");
-        }
+        public async Task<ActionResult> SignUp(SignUpDto signUpDto) =>
+            await ProcessAuthentication(async () => await _authService.SignUp(signUpDto), signUpDto);
 
         [HttpGet]
         public async Task<ActionResult> SignOut()
         {
-            ClearAuthCookies();
+
+            var userEmailCookie = new HttpCookie("UserEmail")
+            {
+                Expires = DateTime.Now.AddDays(-1) 
+            };
+            Response.Cookies.Add(userEmailCookie);
+            
+            var userRoleCookie = new HttpCookie("UserRole") 
+            {
+                Expires = DateTime.Now.AddDays(-1) 
+            };
+            Response.Cookies.Add(userRoleCookie);
+            
+
             return RedirectToAction("SignIn", "Auth");
         }
 
-        private bool DetermineIfAdmin(string email)
+        private async Task<ActionResult> ProcessAuthentication
+            (Func<Task<BaseResponse<bool>>> authServiceMethod, object dto)
         {
-            // Ваша логика определения админа
-            // Пример: админы имеют определенный email или домен
-            return email.EndsWith("@admin.com") || 
-                   email.Equals("admin@example.com", StringComparison.OrdinalIgnoreCase);
-        }
+            
+            if (!ModelState.IsValid) return View(dto is SignInDto ? "SignIn" : "SignUp", dto);
+            
+            var authResponse = await authServiceMethod();
 
-        private void SetAuthCookies(string email, bool isAdmin)
-        {
-            // Кука с email
-            Response.Cookies.Add(new HttpCookie("UserEmail", email)
+            if (!authResponse.Data)
             {
-                Expires = DateTime.Now.AddDays(7),
-                HttpOnly = true,
-                Path = "/"
-            });
-
-            // Кука с ролью
-            Response.Cookies.Add(new HttpCookie("UserRole", isAdmin ? "Admin" : "User")
-            {
-                Expires = DateTime.Now.AddDays(7),
-                HttpOnly = true,
-                Path = "/"
-            });
-        }
-
-        private void ClearAuthCookies()
-        {
-            var cookiesToClear = new[] { "UserEmail", "UserRole" };
-            foreach (var cookieName in cookiesToClear)
-            {
-                Response.Cookies.Add(new HttpCookie(cookieName)
-                {
-                    Expires = DateTime.Now.AddDays(-1),
-                    Path = "/"
-                });
+                TempData[TempDataKeys.Error] = authResponse.Message;
+                return View(dto is SignInDto ? "SignIn" : "SignUp", dto);
             }
-        }
 
+
+            if (dto is SignInDto signInDto) 
+            {
+             
+                HttpCookie userEmailCookie = new HttpCookie("UserEmail", signInDto.Email)
+                {
+                    Expires = DateTime.Now.AddDays(7), 
+                    HttpOnly = true 
+                };
+                Response.Cookies.Add(userEmailCookie);
+
+                // --- НАЧАЛО: Проверка роли и установка cookie UserRole ---
+                try
+                {
+                    BaseResponse<UserDto> userResponse = await _userService.GetUserByEmailAsync(signInDto.Email); 
+                    
+                    if (userResponse != null && userResponse.Data != null) 
+                    {
+                        UserDto user = userResponse.Data; 
+                        
+                        if (user.UserType == UserType.Admin) 
+                        {
+                            // 5. Устанавливаем cookie для Роли
+                            HttpCookie userRoleCookie = new HttpCookie("UserRole", "Admin") 
+                            {
+                                Expires = DateTime.Now.AddDays(7),
+                                HttpOnly = true 
+                            };
+                            Response.Cookies.Add(userRoleCookie);
+                        }
+                    }
+                   
+                }
+                catch (Exception ex)
+                {
+                    // Log.Error("Ошибка при получении роли пользователя для установки cookie: " + ex.Message); 
+                }
+// --- КОНЕЦ: Проверка роли и установка cookie UserRole ---
+
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+        
         private async Task<ActionResult> CheckTokenValidity()
         {
+          
             var response = await _authService.IsTokenValid();
             if (response.Data)
                 return Redirect("/Home/Index");

@@ -14,5 +14,8 @@ namespace v8proj.BissnessLogic.Interfaces.User
         Task<BaseResponse<UserDto>> GetUserByIdAsync(int id);
         Task<BaseResponse<UserDto>> GetUserByEmailAsync(string email);
         Task<BaseResponse<List<UserDto>>> GetUsersAsync(string email, UserType userType , int currentPage , int amountOfUsers); 
+        Task<BaseResponse<bool>> BanUserAsync(int userId); 
+        Task<BaseResponse<bool>> UnbanUserAsync(int userId); 
+        
     }
 }

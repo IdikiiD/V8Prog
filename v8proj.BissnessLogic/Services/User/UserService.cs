@@ -9,6 +9,7 @@ using v8proj.Core.Enums.User;
 using v8proj.Core.Interface.User;
 using v8proj.Core.Model.DTO.User;
 using v8proj.Web.Model.DTO;
+using v8proj.Core.Enums.Entinity; 
 
 namespace v8proj.BissnessLogic.Services.User
 {
@@ -78,5 +79,50 @@ namespace v8proj.BissnessLogic.Services.User
             
             return new BaseResponse<bool>(true, OperationStatus.Success, "User Deleted");
         }
+        public async Task<BaseResponse<bool>> BanUserAsync(int userId)
+        {
+            try
+            {
+                var userEf = await _usersRepository.GetByIdAsync(userId);
+                if (userEf == null)
+                {
+                    return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
+                }
+                
+                userEf.UserStatus = EntityStatus.Banned; 
+
+                await _usersRepository.UpdateAsync(userEf); 
+
+                return new BaseResponse<bool>(true, OperationStatus.Success, "User was banned.");
+            }
+            catch (System.Exception ex)
+            {
+                return new BaseResponse<bool>(false, OperationStatus.Error, "Error occured while banning user");
+            }
+        }
+        
+        public async Task<BaseResponse<bool>> UnbanUserAsync(int userId)
+        {
+            try
+            {
+                var userEf = await _usersRepository.GetByIdAsync(userId);
+                if (userEf == null)
+                {
+                    return new BaseResponse<bool>(false, OperationStatus.Error, "User for unban was not found.");
+                }
+
+                userEf.UserStatus = EntityStatus.Active; 
+
+                await _usersRepository.UpdateAsync(userEf);
+
+                return new BaseResponse<bool>(true, OperationStatus.Success, "User was unbanned.");
+            }
+            catch (System.Exception ex)
+            {
+                return new BaseResponse<bool>(false, OperationStatus.Error, "Error occured while unbanning user.");
+            }
+        }
+        
+        
     }
 }
