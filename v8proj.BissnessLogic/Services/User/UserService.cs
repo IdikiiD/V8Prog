@@ -8,67 +8,73 @@ using v8proj.Core.Enums;
 using v8proj.Core.Enums.User;
 using v8proj.Core.Interface.User;
 using v8proj.Core.Model.DTO.User;
-using v8proj.Web.Model.DTO;
-using v8proj.Core.Enums.Entinity; 
+using v8proj.Web.Model.DTO; // Для BaseResponse
+using v8proj.Core.Enums.Entinity;
 
 namespace v8proj.BissnessLogic.Services.User
 {
     public class UserService : IUserService
     {
         private readonly IUsersRepository _usersRepository;
-        public UserService(IUsersRepository usersRepository) 
+        public UserService(IUsersRepository usersRepository)
             => _usersRepository = usersRepository;
-        
+
         public async Task<BaseResponse<UserDto>> CreateUserAsync(SignUpDto signUpDto)
         {
             var response = await GetUserByEmailAsync(signUpDto.Email);
-            
-            if(response.Data != null)
+
+            if (response.Data != null)
                 return new BaseResponse<UserDto>(null, OperationStatus.Error, "User with this email already exists");
-            
+
             var userEf = Mapper.Map<SignUpDto, UserEf>(signUpDto);
-            
+
             var userEfFromDb = await _usersRepository.CreateAsync(userEf);
-            
+
             return userEfFromDb == null ?
                 new BaseResponse<UserDto>(null, OperationStatus.Error, "User not created") :
                 new BaseResponse<UserDto>(Mapper.Map<UserEf, UserDto>(userEfFromDb), OperationStatus.Success, "User Created");
         }
-        
+
         public async Task<BaseResponse<UserDto>> GetUserByIdAsync(int id)
         {
             var userEf = await _usersRepository.GetByIdAsync(id);
-            
-            return userEf == null ? 
-                new BaseResponse<UserDto>(null, OperationStatus.Error, "User not found") : 
+
+            return userEf == null ?
+                new BaseResponse<UserDto>(null, OperationStatus.Error, "User not found") :
                 new BaseResponse<UserDto>(Mapper.Map<UserEf, UserDto>(userEf), OperationStatus.Success, "User got by id");
         }
 
         public async Task<BaseResponse<UserDto>> GetUserByEmailAsync(string email)
         {
             var userEf = await _usersRepository.GetByEmailAsync(email);
-            
-            return  userEf == null ? 
-                new BaseResponse<UserDto>(null, OperationStatus.Error, "User not found") : 
+
+            return userEf == null ?
+                new BaseResponse<UserDto>(null, OperationStatus.Error, "User not found") :
                 new BaseResponse<UserDto>(Mapper.Map<UserEf, UserDto>(userEf), OperationStatus.Success, "User got by email");
         }
 
-        public async Task<BaseResponse<List<UserDto>>> GetUsersAsync(string searchByEmail, UserType userType, int currentPage, int amountOfUsers)
+        public async Task<BaseResponse<List<UserDto>>> GetUsersAsync(string searchTerm, UserType userType, int currentPage, int amountOfUsers)
         {
-            var userEfs = (await _usersRepository.GetPaginatedUsersByEmailAndTypeAsync(searchByEmail, userType, currentPage, amountOfUsers)).ToList();
-            
-            return !userEfs.Any() ? 
-                new BaseResponse<List<UserDto>>(null, OperationStatus.Success, "Users not found") : 
-                new BaseResponse<List<UserDto>>(userEfs.Select(Mapper.Map<UserEf, UserDto>).ToList(), OperationStatus.Success, "Users got");
+            // Вызываем обновленный метод репозитория
+            var userEfs = (await _usersRepository.GetPaginatedUsersBySearchTermAndTypeAsync(searchTerm, userType, currentPage, amountOfUsers)).ToList();
+
+            if (!userEfs.Any())
+            {
+                return new BaseResponse<List<UserDto>>(null, OperationStatus.Success, "Users not found");
+            }
+
+            // Маппинг UserEf в UserDto
+            var userDtos = userEfs.Select(userEf => Mapper.Map<UserEf, UserDto>(userEf)).ToList();
+            return new BaseResponse<List<UserDto>>(userDtos, OperationStatus.Success, "Users got");
         }
-        
+
         public async Task<BaseResponse<UserDto>> UpdateUserAsync(UserDto userDto)
         {
             var userEf = Mapper.Map<UserDto, UserEf>(userDto);
-            
+
             var userEfFromDb = await _usersRepository.UpdateAsync(userEf);
-            
-            return  userEfFromDb == null ? 
+
+            return userEfFromDb == null ?
                 new BaseResponse<UserDto>(null, OperationStatus.Error, "User not Updated") :
                 new BaseResponse<UserDto>(Mapper.Map<UserEf, UserDto>(userEfFromDb), OperationStatus.Success, "User Updated");
         }
@@ -76,7 +82,7 @@ namespace v8proj.BissnessLogic.Services.User
         public async Task<BaseResponse<bool>> DeleteUserByIdAsync(int id)
         {
             await _usersRepository.DeleteByIdAsync(id);
-            
+
             return new BaseResponse<bool>(true, OperationStatus.Success, "User Deleted");
         }
         public async Task<BaseResponse<bool>> BanUserAsync(int userId)
@@ -88,10 +94,10 @@ namespace v8proj.BissnessLogic.Services.User
                 {
                     return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
                 }
-                
-                userEf.UserStatus = EntityStatus.Banned; 
 
-                await _usersRepository.UpdateAsync(userEf); 
+                userEf.UserStatus = EntityStatus.Banned;
+
+                await _usersRepository.UpdateAsync(userEf);
 
                 return new BaseResponse<bool>(true, OperationStatus.Success, "User was banned.");
             }
@@ -100,7 +106,7 @@ namespace v8proj.BissnessLogic.Services.User
                 return new BaseResponse<bool>(false, OperationStatus.Error, "Error occured while banning user");
             }
         }
-        
+
         public async Task<BaseResponse<bool>> UnbanUserAsync(int userId)
         {
             try
@@ -111,7 +117,7 @@ namespace v8proj.BissnessLogic.Services.User
                     return new BaseResponse<bool>(false, OperationStatus.Error, "User for unban was not found.");
                 }
 
-                userEf.UserStatus = EntityStatus.Active; 
+                userEf.UserStatus = EntityStatus.Active;
 
                 await _usersRepository.UpdateAsync(userEf);
 
@@ -122,7 +128,6 @@ namespace v8proj.BissnessLogic.Services.User
                 return new BaseResponse<bool>(false, OperationStatus.Error, "Error occured while unbanning user.");
             }
         }
-        
-        
     }
 }
+

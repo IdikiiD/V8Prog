@@ -1,7 +1,9 @@
 @model List<v8proj.Core.Model.DTO.User.UserDto>
-
+@using System.Linq 
+@using v8proj.Core.Enums.Entinity 
 @{
     ViewBag.Title = "Users";
+    
 }
 
 <!DOCTYPE html>
@@ -28,6 +30,26 @@
             <span class="block sm:inline">@TempData["Error"]</span>
         </div>
     }
+
+    @* --- НАЧАЛО: ДОБАВЛЕННАЯ ФОРМА ПОИСКА --- *@
+    @using (Html.BeginForm("Users", "Admin", FormMethod.Get, new { @class = "mb-6 flex items-center" }))
+    {
+        <div class="relative flex-grow mr-2"> 
+            @Html.TextBox("searchString", ViewBag.CurrentSearch as string,
+                new {
+                    @class = "w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+                    placeholder = "Search by Name or Email..." 
+                })
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            Search 
+        </button>
+        if (!string.IsNullOrEmpty(ViewBag.CurrentSearch as string))
+        {
+            <a href="@Url.Action("Users", "Admin")" class="ml-3 text-sm text-gray-600 hover:text-blue-600">Clear</a> 
+        }
+    }
+    @* --- КОНЕЦ: ДОБАВЛЕННАЯ ФОРМА ПОИСКА --- *@
 
 
     <table class="min-w-full bg-white border border-gray-200 shadow-md rounded">
@@ -79,14 +101,11 @@
                             {
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="userId" value="@user.Id" />
-                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure, you want to uban this user? @user.Email?');">Unban</button>
+                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure, you want to unban this user? @user.Email?');">Unban</button>
                             }
-
                         }
-
                     </td>
                 </tr>
-
             }
         }
         else
@@ -97,7 +116,6 @@
         }
         </tbody>
     </table>
-
 
 </div>
 </body>
