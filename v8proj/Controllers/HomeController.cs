@@ -19,6 +19,10 @@ namespace v8proj.Controllers
 
             return View(cars); // ✅ Передаем список
         }
+        public ActionResult Categories()
+        {
+            return View();
+        }
         
         public ActionResult Cart()
         {

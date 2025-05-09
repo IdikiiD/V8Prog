@@ -7,7 +7,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="" />
+    <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/v8proj/Controllers/ProductDescriptionsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/v8proj/Views/Home/Categories.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj.DAL/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj.DAL/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Header.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Header.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Web.config" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Web.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/v8proj.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/v8proj.csproj" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +69,11 @@
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+<<<<<<< Updated upstream
     &quot;git-widget-placeholder&quot;: &quot;demo&quot;,
+=======
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+>>>>>>> Stashed changes
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -110,10 +124,17 @@
       <workItem from="1741906777993" duration="3304000" />
       <workItem from="1742031858429" duration="36793000" />
       <workItem from="1742505732162" duration="8537000" />
+<<<<<<< Updated upstream
       <workItem from="1743586404144" duration="447000" />
       <workItem from="1744022212436" duration="1808000" />
       <workItem from="1744024201055" duration="1140000" />
       <workItem from="1744025355997" duration="1392000" />
+=======
+      <workItem from="1743361766627" duration="2955000" />
+      <workItem from="1743419185323" duration="2965000" />
+      <workItem from="1743422862837" duration="1149000" />
+      <workItem from="1743426683822" duration="136000" />
+>>>>>>> Stashed changes
     </task>
     <task id="LOCAL-00001" summary="Changed all , project works , all links works , we need just add new features">
       <option name="closed" value="true" />

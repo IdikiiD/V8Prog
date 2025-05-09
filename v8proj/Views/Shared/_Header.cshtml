@@ -6,6 +6,10 @@
         </div>
         <nav class="flex items-center space-x-6">
             <a href="@Url.Action("Index", "Home")" class="text-black hover:text-gray-700">Каталог</a>
+            <li>
+                <a href="@Url.Action("Categories", "Home")" class="text-gray-700 hover:text-blue-500">Категории</a>
+            </li>
+
             <a href="@Url.Action("Cart", "Home")" class="text-black hover:text-gray-700">Корзина</a>
             @if (Request.Cookies["UserEmail"] != null)
             {
