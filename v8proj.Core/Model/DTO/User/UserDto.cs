@@ -25,5 +25,7 @@ namespace v8proj.Core.Model.DTO.User
         public EntityStatus UserStatus { get; set; }
         public AccountVerificationStatus IsVerified { get; set; }
         public SignUpForLettersStatus IsSignUpForLetters { get; set; }
+        
+     
     }
-}   
+}

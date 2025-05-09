@@ -8,6 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/v8proj/Controllers/ProductDescriptionsController.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/v8proj/Views/Home/Categories.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
@@ -17,6 +18,9 @@
       <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Header.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Header.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/Views/Web.config" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Web.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/v8proj.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/v8proj.csproj" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
+>>>>>>> f110cf5b9ee2e726d19da04895f584d0f1a563a7
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,12 +133,19 @@
       <workItem from="1744022212436" duration="1808000" />
       <workItem from="1744024201055" duration="1140000" />
       <workItem from="1744025355997" duration="1392000" />
+<<<<<<< HEAD
 =======
       <workItem from="1743361766627" duration="2955000" />
       <workItem from="1743419185323" duration="2965000" />
       <workItem from="1743422862837" duration="1149000" />
       <workItem from="1743426683822" duration="136000" />
 >>>>>>> Stashed changes
+=======
+      <workItem from="1746444388132" duration="16000" />
+      <workItem from="1746444984343" duration="164000" />
+      <workItem from="1746445243048" duration="2167000" />
+      <workItem from="1746521975773" duration="212000" />
+>>>>>>> f110cf5b9ee2e726d19da04895f584d0f1a563a7
     </task>
     <task id="LOCAL-00001" summary="Changed all , project works , all links works , we need just add new features">
       <option name="closed" value="true" />

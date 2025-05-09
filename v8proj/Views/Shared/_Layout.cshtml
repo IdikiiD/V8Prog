@@ -10,36 +10,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-@{
-    var userRole = Request.Cookies["UserRole"]?.Value ?? "Guest";
-}
+@Html.Partial("_Header")
 
-@if (userRole == "Admin")
-{
-    @Html.Partial("~/Views/Shared/_AdminerHeader.cshtml") <!-- Полный путь -->
-}
-else
-{
-    @Html.Partial("~/Views/Shared/_Header.cshtml") <!-- Полный путь -->
-}
+<main>
+    @RenderBody()
+</main>
 
-    <main>
-        @RenderBody()
-    </main>
+<footer class="bg-white shadow-lg mt-8">
+    <div class="container mx-auto px-4 py-6">
+        <div class="text-center text-gray-600">
+            &copy; @DateTime.Now.Year - V8 Performance. Все права защищены.
+        </div>
+    </div>
+</footer>
 
-    <footer class="bg-white shadow-lg mt-8">
-        @Html.Partial("_Footer")
-    </footer>
+<script>
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        document.getElementById('profileModal').classList.remove('hidden');
+    });
 
-    <script>
-        document.getElementById('profileBtn').addEventListener('click', () => {
-            document.getElementById('profileModal').classList.remove('hidden');
-        });
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-    </script>
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+</script>
 </body>
 </html>
 
