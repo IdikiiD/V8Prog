@@ -1,27 +1,23 @@
-﻿@{
+﻿@model v8proj.Web.Model.ViewModels.HomeViewModel
+
+@{
     ViewBag.Title = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model List<v8proj.Web.Model.eUseControl>
 
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-8 text-center">Наши автомобили</h1>
-
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach (var car in Model)
+        @foreach (var car in Model.Cars)
         {
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="@car.CartImage"
-                     alt="@car.CartName"
-                     class="w-full h-48 object-cover"/>
-
+                <img src="@car.CartImage" alt="@car.CartName" class="w-full h-48 object-cover"/>
                 <div class="p-6">
                     <h2 class="text-xl font-bold mb-2">@car.CartName</h2>
                     <p class="text-gray-600 mb-4">@car.CartDescription</p>
                     <div class="flex justify-between items-center">
                         <span class="text-2xl font-bold">$@car.CartPrice</span>
-                        <a href="#"
-                           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                             Подробнее
                         </a>
                     </div>
@@ -29,4 +25,39 @@
             </div>
         }
     </div>
+
+    <h2 class="text-2xl font-bold mt-10 mb-4">Посты</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                @if (!string.IsNullOrEmpty(post.ImagePath1))
+                {
+                    <img src="@Url.Action("Image", "Post", new { file = System.IO.Path.GetFileName(post.ImagePath1) })"
+                         alt="@post.Title" class="w-full h-48 object-cover rounded-t-lg" />
+                }
+                else
+                {
+                    <img src="~/Content/Images/default-image.jpg" alt="Default image" class="w-full h-48 object-cover rounded-t-lg"/>
+                }
+
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-xl font-bold">@post.Title</h2>
+                        <a href="@Url.Action("Details", "Post", new { id = post.Id })"
+                           class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm">
+                            Подробнее
+                        </a>
+                    </div>
+                    <p class="text-gray-600">@post.Category</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <a href="@Url.Action("Create", "Post")" style="position: fixed; bottom: 20px; right: 20px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 50%; text-align: center; font-size: 24px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        +
+    </a>
+    
 </div>
+

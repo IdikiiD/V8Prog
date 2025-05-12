@@ -7,31 +7,28 @@
 
         <nav class="flex items-center space-x-6">
             <a href="@Url.Action("Index", "Home")" class="text-black hover:text-gray-700">Каталог</a>
-            <li>
-                <a href="@Url.Action("Categories", "Home")" class="text-gray-700 hover:text-blue-500">Категории</a>
-            </li>
-
+            <a class="text-black hover:text-gray-300" href="@Url.Action("Categories", "Categories")">Категории</a>
             <a href="@Url.Action("Cart", "Home")" class="text-black hover:text-gray-700">Корзина</a>
-                
-            @if (Request.Cookies["UserEmail"] != null) 
+
+            @if (Request.Cookies["UserEmail"] != null)
             {
                 <a href="@Url.Action("Profile", "Home")" class="text-black hover:text-gray-700">Профиль</a>
 
                 // --- НАЧАЛО: Проверка роли администратора (через cookie UserRole) ---
-                if (Request.Cookies["UserRole"]?.Value == "Admin") 
+                if (Request.Cookies["UserRole"]?.Value == "Admin")
                 {
                     <a href="@Url.Action("Dashboard", "Admin")" class="px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700">Dashboard</a>
                     @* Замените "AdminDashboard" и "Index" на ваш контроллер/действие админ-панели *@
                 }
 
-                <a href="@Url.Action("SignOut", "Auth")" class="text-black hover:text-gray-700">Выход</a> 
+                <a href="@Url.Action("SignOut", "Auth")" class="text-black hover:text-gray-700">Выход</a>
             }
-            else 
+            else
             {
-                <a href="@Url.Action("SignIn", "Auth")" class="text-black hover:text-gray-700">Вход</a> 
-                <a href="@Url.Action("SignUp", "Auth")" class="text-black hover:text-gray-700">Регистрация</a> 
+                <a href="@Url.Action("SignIn", "Auth")" class="text-black hover:text-gray-700">Вход</a>
+                <a href="@Url.Action("SignUp", "Auth")" class="text-black hover:text-gray-700">Регистрация</a>
             }
-            
+
         </nav>
     </div>
 </header>

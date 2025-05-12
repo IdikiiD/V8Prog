@@ -1,63 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Web.Mvc;
+using v8proj.DAL;
 using v8proj.Web.Model;
+using v8proj.Web.Model.ViewModels;
+using v8proj.Core.Model; 
+
 
 namespace v8proj.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context = new ApplicationDbContext(); // Подключение к базе
+
         public ActionResult Index()
         {
-            List<eUseControl> cars = new List<eUseControl>
+            
+            var cars = _context.eUseControl.ToList();
+            var posts = _context.Posts
+                .Where(p => !string.IsNullOrEmpty(p.ImagePath1))
+                .ToList();
+
+            var viewModel = new HomeViewModel
             {
-                new eUseControl { CartName = "Mercedes", CartDescription = "Good car", CartPrice = 10000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "BMW", CartDescription = "Sporty and powerful", CartPrice = 12000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" }
+                Cars = cars,
+                Posts = posts
             };
+            foreach (var post in posts)
+            {
+                if (string.IsNullOrEmpty(post.ImagePath1))
+                {
+                    post.ImagePath1 = "/Content/Uploads/Posts/no-image.png"; // Заглушка
+                }
+            }
 
-            return View(cars); // ✅ Передаем список
-        }
-        public ActionResult Categories()
-        {
-            return View();
-        }
-        
-        public ActionResult Cart()
-        {
-            return View();
+            return View(viewModel);
+            
         }
 
-        public ActionResult SignUp()
-        {
-            return View("~/Views/Auth/SignUp.cshtml");
-        }
-        
-
-        public ActionResult SignIn()
-        {
-            return View("~/Views/Auth/SignIn.cshtml");
-        }
-        
-        public ActionResult Setings()
-        {
-            return View();
-        }
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-        
-        public ActionResult Profile()
-        {
-            return View("~/Views/Profile/Profile.cshtml");
-        }
-        
-        public ActionResult ProductManagment()
-        {
-            return View("~/Views/Admin/ProductManagment.cshtml");
-        }
-        
+        public ActionResult Cart() => View();
+        public ActionResult SignUp() => View("~/Views/Auth/SignUp.cshtml");
+        public ActionResult SignIn() => View("~/Views/Auth/SignIn.cshtml");
+        public ActionResult Setings() => View();
+        public ActionResult ForgotPassword() => View();
+        public ActionResult Profile() => View("~/Views/Profile/Profile.cshtml");
+        public ActionResult ProductManagment() => View("~/Views/Admin/ProductManagment.cshtml");
     }
 }

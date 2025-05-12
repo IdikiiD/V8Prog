@@ -1,0 +1,87 @@
+@using v8proj.Core.Entities
+@model Post
+
+@{
+    ViewBag.Title = "Post Details";
+
+    // Collect existing image paths
+    var images = new List<string>();
+    if (!string.IsNullOrEmpty(Model.ImagePath1)) { images.Add(Model.ImagePath1); }
+    if (!string.IsNullOrEmpty(Model.ImagePath2)) { images.Add(Model.ImagePath2); }
+    if (!string.IsNullOrEmpty(Model.ImagePath3)) { images.Add(Model.ImagePath3); }
+
+    string gridColsClass = images.Count == 1 ? "grid-cols-1 place-items-center"
+        : images.Count == 2 ? "grid-cols-2"
+        : "grid-cols-3";
+}
+
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-6">@Model.Title</h1>
+
+    <div class="mb-4">
+        <strong>Category:</strong> @Model.Category
+    </div>
+
+    @if (images.Count > 0)
+    {
+        <div class="grid gap-4 mb-6 @gridColsClass">
+            @foreach (var img in images)
+            {
+                <div class="image-container">
+                    <img src="@Url.Action("Image", "Post", new { file = System.IO.Path.GetFileName(img) })"
+                         alt="Post image" class="w-full h-64 object-cover rounded-lg shadow-md click-to-enlarge" />
+                </div>
+            }
+        </div>
+    }
+
+    <div class="bg-white p-6 rounded-lg shadow-inner mb-6">
+        <p class="text-gray-800 text-lg">@Model.Description</p>
+    </div>
+
+    <p class="text-gray-600">Published: @Model.CreatedAt.ToLongDateString()</p>
+
+    <a href="@Url.Action("Index", "Home")"
+       class="inline-block mt-8 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+        Back to list
+    </a>
+</div>
+
+@section Scripts {
+    <script>
+        // Функция для увеличения и уменьшения изображения
+        let images = document.querySelectorAll('.click-to-enlarge');
+        let overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.display = 'none';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '9999';
+        document.body.appendChild(overlay);
+
+        // Обработчик клика по изображению
+        images.forEach(img => {
+            img.addEventListener('click', function () {
+                let largeImage = document.createElement('img');
+                largeImage.src = img.src;
+                largeImage.style.maxWidth = '90%';
+                largeImage.style.maxHeight = '90%';
+                largeImage.style.borderRadius = '10px';
+                largeImage.style.objectFit = 'contain';
+                overlay.innerHTML = ''; // очищаем старое изображение
+                overlay.appendChild(largeImage);
+                overlay.style.display = 'flex';
+            });
+        });
+
+        // Обработчик клика на пустое место для уменьшения изображения
+        overlay.addEventListener('click', function () {
+            overlay.style.display = 'none';
+        });
+    </script>
+}

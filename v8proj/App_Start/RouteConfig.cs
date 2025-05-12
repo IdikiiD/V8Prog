@@ -12,6 +12,8 @@ namespace v8proj
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("Content/{*pathInfo}");
+
 
             // 1. Добавляем маршрут для Админ-панели
             routes.MapRoute(

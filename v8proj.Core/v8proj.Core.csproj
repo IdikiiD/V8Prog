@@ -48,6 +48,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Constant\TempDataKeys.cs" />
+        <Compile Include="Entities\Post.cs" />
         <Compile Include="Entities\User\UserEF.cs" />
         <Compile Include="Enums\Entinity\EntityStatus.cs" />
         <Compile Include="Enums\Response.cs" />
@@ -62,10 +63,8 @@
         <Compile Include="Model\DTO\User\SignUpDto.cs" />
         <Compile Include="Model\DTO\User\UserDto.cs" />
         <Compile Include="Model\eUseControl.cs" />
+        <Compile Include="Model\ViewModels\HomeViewModel.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Model\ViewModels\" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />

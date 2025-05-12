@@ -4,25 +4,121 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8" />
+    
+    <base href="/"/>
+
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - V8 Performance</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Эффект увеличения при наведении */
+        .click-to-enlarge {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .click-to-enlarge:hover {
+            transform: scale(1.1); /* Увеличение на 10% */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+        }
+
+        /* Для увеличенного изображения */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+    </style>
+
+
+    <style>
+        .post-item {
+            width: 250px; /* Уменьшенная ширина */
+            height: auto; /* Автоматическая высота, чтобы не обрезать текст */
+            margin-bottom: 20px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px; /* Фиксированная высота для изображений */
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
 @Html.Partial("_Header")
 
-<main>
+<main class="flex-grow">
     @RenderBody()
 </main>
 
-<footer class="bg-white shadow-lg mt-8">
+<footer class="bg-white shadow-lg mt-auto">
     <div class="container mx-auto px-4 py-6">
         <div class="text-center text-gray-600">
             &copy; @DateTime.Now.Year - V8 Performance. Все права защищены.
         </div>
     </div>
 </footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+@RenderSection("Scripts", required: false)
+
+@section Scripts {
+    <script>
+        // Функция для увеличения и уменьшения изображения
+        let images = document.querySelectorAll('.click-to-enlarge');
+        let overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        overlay.style.display = 'none';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '9999';
+        document.body.appendChild(overlay);
+
+        // Обработчик клика по изображению
+        images.forEach(img => {
+            img.addEventListener('click', function () {
+                let largeImage = document.createElement('img');
+                largeImage.src = img.src;
+                largeImage.style.maxWidth = '90%';
+                largeImage.style.maxHeight = '90%';
+                largeImage.style.borderRadius = '10px';
+                largeImage.style.objectFit = 'contain';
+                overlay.innerHTML = ''; // очищаем старое изображение
+                overlay.appendChild(largeImage);
+                overlay.style.display = 'flex';
+            });
+        });
+
+        // Обработчик клика на пустое место для уменьшения изображения
+        overlay.addEventListener('click', function () {
+            overlay.style.display = 'none';
+        });
+    </script>
+}
+
 
 <script>
     document.getElementById('profileBtn').addEventListener('click', () => {
@@ -35,4 +131,3 @@
 </script>
 </body>
 </html>
-
