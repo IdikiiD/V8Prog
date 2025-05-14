@@ -19,5 +19,7 @@ namespace v8proj.BissnessLogic.Interfaces.User
         // --- ИЗМЕНЕНИЕ КОНЕЦ ---
         Task<BaseResponse<bool>> BanUserAsync(int userId);
         Task<BaseResponse<bool>> UnbanUserAsync(int userId);
+        Task<BaseResponse<bool>> MakeUserAdminAsync(int userId);
+        Task<BaseResponse<bool>> RevokeUserAdminAsync(int userId);
     }
 }

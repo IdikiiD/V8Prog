@@ -1,9 +1,10 @@
 @model List<v8proj.Core.Model.DTO.User.UserDto>
-@using System.Linq 
-@using v8proj.Core.Enums.Entinity 
+@using System.Linq
+@using v8proj.Core.Enums.Entinity
+@using v8proj.Core.Enums.User 
 @{
     ViewBag.Title = "Users";
-    
+    var currentUserEmail = User.Identity.Name;
 }
 
 <!DOCTYPE html>
@@ -30,26 +31,24 @@
             <span class="block sm:inline">@TempData["Error"]</span>
         </div>
     }
-
-    @* --- НАЧАЛО: ДОБАВЛЕННАЯ ФОРМА ПОИСКА --- *@
+    
     @using (Html.BeginForm("Users", "Admin", FormMethod.Get, new { @class = "mb-6 flex items-center" }))
     {
-        <div class="relative flex-grow mr-2"> 
+        <div class="relative flex-grow mr-2">
             @Html.TextBox("searchString", ViewBag.CurrentSearch as string,
                 new {
                     @class = "w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-                    placeholder = "Search by Name or Email..." 
+                    placeholder = "Search by Name or Email..."
                 })
         </div>
         <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-            Search 
+            Search
         </button>
         if (!string.IsNullOrEmpty(ViewBag.CurrentSearch as string))
         {
-            <a href="@Url.Action("Users", "Admin")" class="ml-3 text-sm text-gray-600 hover:text-blue-600">Clear</a> 
+            <a href="@Url.Action("Users", "Admin")" class="ml-3 text-sm text-gray-600 hover:text-blue-600">Clear</a>
         }
     }
-    @* --- КОНЕЦ: ДОБАВЛЕННАЯ ФОРМА ПОИСКА --- *@
 
 
     <table class="min-w-full bg-white border border-gray-200 shadow-md rounded">
@@ -60,6 +59,7 @@
             <th class="py-3 px-4 border-b">Email</th>
             <th class="py-3 px-4 border-b">Registration date</th>
             <th class="py-3 px-4 border-b">Status</th>
+            <th class="py-3 px-4 border-b">Role</th>
             <th class="py-3 px-4 border-b">Actions</th>
         </tr>
         </thead>
@@ -74,8 +74,7 @@
                     <td class="py-3 px-4">@user.Email</td>
                     <td class="py-3 px-4">@user.DateRegistered.ToString("dd.MM.yyyy HH:mm")</td>
                     <td class="py-3 px-4">
-
-                        @if (user.UserStatus == v8proj.Core.Enums.Entinity.EntityStatus.Banned)
+                        @if (user.UserStatus == EntityStatus.Banned)
                         {
                             <span class="text-red-600 font-semibold">@user.UserStatus.ToString()</span>
                         }
@@ -85,24 +84,66 @@
                         }
                     </td>
                     <td class="py-3 px-4">
-
-                        @if (user.UserStatus != v8proj.Core.Enums.Entinity.EntityStatus.Banned)
+                        @if (user.UserType == UserType.Admin)
                         {
-                            using (Html.BeginForm("BanUser", "Admin", FormMethod.Post, new { @class="inline-block" }))
+                            <span class="text-blue-600 font-semibold">Admin</span>
+                        }
+                        else
+                        {
+                            <span class="text-gray-600 font-semibold">User</span>
+                        }
+                    </td>
+                    <td class="py-3 px-4">
+                        @if (user.Email != currentUserEmail) 
+                        {
+                            if (user.UserType != UserType.Admin && user.UserStatus != EntityStatus.Banned)
                             {
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="userId" value="@user.Id" />
-                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure, you want to ban this user? @user.Email?');">Ban</button>
+                                using (Html.BeginForm("MakeAdmin", "Admin", FormMethod.Post, new { @class = "inline-block mr-2" })) // Добавлен отступ
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="bg-purple-500 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure you want to make @user.Email an administrator?');">
+                                        Make Admin
+                                    </button>
+                                }
+                            }
+                            
+                            if (user.UserType == UserType.Admin)
+                            {
+                                using (Html.BeginForm("RevokeAdmin", "Admin", FormMethod.Post, new { @class = "inline-block mr-2" })) // Добавлен отступ
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure you want to revoke administrator rights from @user.Email?');">
+                                        Revoke Admin
+                                    </button>
+                                }
+                            }
+                            if (user.UserType != UserType.Admin) 
+                            {
+                                if (user.UserStatus != EntityStatus.Banned)
+                                {
+                                    using (Html.BeginForm("BanUser", "Admin", FormMethod.Post, new { @class = "inline-block" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure, you want to ban this user @user.Email?');">Ban</button>
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("UnbanUser", "Admin", FormMethod.Post, new { @class = "inline-block" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure, you want to unban this user @user.Email?');">Unban</button>
+                                    }
+                                }
                             }
                         }
                         else
                         {
-                            using (Html.BeginForm("UnbanUser", "Admin", FormMethod.Post, new { @class="inline-block" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="userId" value="@user.Id" />
-                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm" onclick="return confirm('Are you sure, you want to unban this user? @user.Email?');">Unban</button>
-                            }
+                            <span class="text-gray-400 italic">No actions for self</span>
                         }
                     </td>
                 </tr>
@@ -111,12 +152,11 @@
         else
         {
             <tr>
-                <td colspan="6" class="text-center py-4">Users not found.</td>
+                <td colspan="7" class="text-center py-4">Users not found.</td>
             </tr>
         }
         </tbody>
     </table>
-
 </div>
 </body>
 </html>

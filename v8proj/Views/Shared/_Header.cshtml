@@ -5,7 +5,7 @@
         </div>
 
         <nav class="flex items-center space-x-6">
-            <a href="@Url.Action("Index", "Home")" class="text-black hover:text-gray-700">Каталог</a>
+            <a href="@Url.Action("Index", "Home")" class="text-black hover:text-gray-700">Главная</a>
             <a class="text-black hover:text-gray-300" href="@Url.Action("Categories", "Categories")">Категории</a>
             <a href="@Url.Action("Favorites", "Post")" class="text-black hover:text-gray-700">Избранное</a>
 
@@ -14,12 +14,11 @@
             @if (Request.Cookies["UserEmail"] != null)
             {
                 <a href="@Url.Action("Profile", "Home")" class="text-black hover:text-gray-700">Профиль</a>
-
-                // --- НАЧАЛО: Проверка роли администратора (через cookie UserRole) ---
+                
                 if (Request.Cookies["UserRole"]?.Value == "Admin")
                 {
                     <a href="@Url.Action("Dashboard", "Admin")" class="px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700">Dashboard</a>
-                    @* Замените "AdminDashboard" и "Index" на ваш контроллер/действие админ-панели *@
+                   
                 }
 
                 <a href="@Url.Action("SignOut", "Auth")" class="text-black hover:text-gray-700">Выход</a>

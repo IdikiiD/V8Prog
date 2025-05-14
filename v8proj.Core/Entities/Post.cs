@@ -15,10 +15,12 @@ namespace v8proj.Core.Entities
         public string ImagePath2 { get; set; }
         public string ImagePath3 { get; set; }
 
-        public DateTime CreatedAt { get; set; } // <-- это поле должно быть
-
-
+        public DateTime CreatedAt { get; set; } 
         public virtual ICollection<UserEf> FavoritedBy { get; set; } = new List<UserEf>();
 
+
+       
+
+       
     }
 }

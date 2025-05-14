@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ExpressMapper;
@@ -128,6 +129,47 @@ namespace v8proj.BissnessLogic.Services.User
                 return new BaseResponse<bool>(false, OperationStatus.Error, "Error occured while unbanning user.");
             }
         }
+        public async Task<BaseResponse<bool>> MakeUserAdminAsync(int userId)
+        {
+            try
+            {
+                var userEf = await _usersRepository.GetByIdAsync(userId);
+                if (userEf == null)
+                {
+                    return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
+                }
+
+                userEf.UserType = UserType.Admin; // Устанавливаем тип пользователя в "Admin"
+                await _usersRepository.UpdateAsync(userEf);
+                return new BaseResponse<bool>(true, OperationStatus.Success, "User is now an administrator.");
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<bool>(false, OperationStatus.Error, $"Error: {ex.Message}");
+            }
+        }
+
+        public async Task<BaseResponse<bool>> RevokeUserAdminAsync(int userId)
+        {
+            try
+            {
+                var userEf = await _usersRepository.GetByIdAsync(userId);
+                if (userEf == null)
+                {
+                    return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
+                }
+
+                userEf.UserType = UserType.User; // Снимаем права администратора
+                await _usersRepository.UpdateAsync(userEf);
+                return new BaseResponse<bool>(true, OperationStatus.Success, "Administrator rights revoked.");
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<bool>(false, OperationStatus.Error, $"Error: {ex.Message}");
+            }
+        }
     }
+    
+    
 }
 

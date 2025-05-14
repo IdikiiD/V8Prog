@@ -1,9 +1,7 @@
-// Файл: v8proj.DAL/Repositories/User/UsersRepository.cs
 using System.Collections.Generic;
-using System.Data.Entity; // Для ToListAsync(), SingleOrDefaultAsync() и т.д. если это EF6, или Microsoft.EntityFrameworkCore для EF Core
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using ExpressMapper; // Этот using здесь не нужен, если маппинг происходит только в UpdateAsync
 using v8proj.Core.Entities.User;
 using v8proj.Core.Enums.User;
 using v8proj.Core.Interface.User;
@@ -30,48 +28,45 @@ namespace v8proj.DAL.Repositories.User
         public async Task<UserEf> GetByEmailAsync(string email) =>
             await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
 
-        // --- ИЗМЕНЕНИЕ НАЧАЛО ---
         public async Task<IEnumerable<UserEf>> GetPaginatedUsersBySearchTermAndTypeAsync(string searchTerm, UserType userType, int page, int pageSize)
         {
-            var query = _context.Users.AsQueryable(); // Начинаем с IQueryable
+            var query = _context.Users.AsQueryable();
 
-            // Фильтрация по типу пользователя
-            if (userType != UserType.None) // Предполагаем, что UserType.None означает "не фильтровать по типу"
+            if (userType != UserType.None)
             {
                 query = query.Where(x => x.UserType == userType);
             }
 
-            // Фильтрация по поисковой строке (имя ИЛИ email)
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                string searchTermLower = searchTerm.ToLower(); // Для регистронезависимого поиска
+                string searchTermLower = searchTerm.ToLower();
                 query = query.Where(x => x.FullName.ToLower().Contains(searchTermLower) ||
-                                         x.Email.ToLower().Contains(searchTermLower));
+                             x.Email.ToLower().Contains(searchTermLower));
             }
 
-            // Сортировка и пагинация
-            return await query.OrderByDescending(x => x.UserId) // Или OrderBy(x => x.FullName)
-                              .Skip((page - 1) * pageSize)
-                              .Take(pageSize)
-                              .ToListAsync();
+            // Явно проверяем, есть ли элементы, прежде чем применять Skip и Take
+            if (await query.AnyAsync())
+            {
+                return await query.OrderByDescending(x => x.UserId)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
+            }
+            else
+            {
+                return new List<UserEf>(); // Возвращаем пустой список.
+            }
         }
-        // --- ИЗМЕНЕНИЕ КОНЕЦ ---
 
         public async Task<UserEf> UpdateAsync(UserEf entity)
         {
-            // Важно: Этот метод мапит entity на existingUser.
-            // Убедитесь, что entity содержит только те поля, которые должны быть обновлены,
-            // или настройте ExpressMapper для игнорирования определенных полей при обновлении.
             var existingUser = await _context.Users.FindAsync(entity.UserId);
             if (existingUser == null) return null;
 
-            // Если вы используете EF Core, отслеживание изменений происходит автоматически,
-            // и этот маппинг может быть заменен на прямое присвоение свойств:
-            // existingUser.FullName = entity.FullName;
-            // existingUser.Email = entity.Email; // и т.д. для обновляемых полей
-            // Если вы используете ExpressMapper для обновления, убедитесь, что он настроен правильно
-            // и не перезаписывает, например, PasswordHash или DateRegistered ненужными значениями из entity.
-            Mapper.Map(entity, existingUser); // Если entity - это UserEf, полученный из UserDto, то здесь может быть проблема с PasswordHash
+            existingUser.FullName = entity.FullName;
+            existingUser.Email = entity.Email; 
+            existingUser.UserType = entity.UserType;
+            existingUser.UserStatus = entity.UserStatus;
 
             await _context.SaveChangesAsync();
             return existingUser;
