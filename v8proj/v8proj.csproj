@@ -374,6 +374,7 @@
     <Content Include="Views\Home\Setings.cshtml" />
     <Content Include="Views\Post\Create.cshtml" />
     <Content Include="Views\Post\Details.cshtml" />
+    <Content Include="Views\Post\Favorites.cshtml" />
     <Content Include="Views\Profile\Profile.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />

@@ -12,19 +12,23 @@ namespace v8proj.Controllers
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext(); // Подключение к базе
 
-        public ActionResult Index()
+        public ActionResult Index(string category)
         {
-            
             var cars = _context.eUseControl.ToList();
-            var posts = _context.Posts
+
+            var postsQuery = _context.Posts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                postsQuery = postsQuery.Where(p => p.Category == category);
+            }
+
+            var posts = postsQuery
                 .Where(p => !string.IsNullOrEmpty(p.ImagePath1))
+                .OrderByDescending(p => p.CreatedAt) // ← это ключевой момент
                 .ToList();
 
-            var viewModel = new HomeViewModel
-            {
-                Cars = cars,
-                Posts = posts
-            };
+
             foreach (var post in posts)
             {
                 if (string.IsNullOrEmpty(post.ImagePath1))
@@ -33,9 +37,15 @@ namespace v8proj.Controllers
                 }
             }
 
+            var viewModel = new HomeViewModel
+            {
+                Cars = cars,
+                Posts = posts
+            };
+
             return View(viewModel);
-            
         }
+
 
         public ActionResult Cart() => View();
         public ActionResult SignUp() => View("~/Views/Auth/SignUp.cshtml");

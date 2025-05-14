@@ -2,7 +2,31 @@
 @model Post
 
 @{
+
+    var userEmailCookie = Request.Cookies["UserEmail"];
+    int? currentUserId = null;
+
+    if (userEmailCookie != null)
+    {
+        var userEmail = userEmailCookie.Value;
+
+        // Используем UserService или репозиторий (можно сделать прямой SQL-запрос в контроллере, если не хочешь сюда логику тянуть)
+        var db = new v8proj.DAL.ApplicationDbContext();
+        var currentUser = db.Users.FirstOrDefault(u => u.Email == userEmail);
+        if (currentUser != null)
+        {
+            currentUserId = currentUser.UserId;
+        }
+    }
+
+    bool isFavorite = Model.FavoritedBy?.Any(u => u.UserId == currentUserId) ?? false;
+    string heartClass = isFavorite ? "bi-heart-fill" : "bi-heart";
+
+
     ViewBag.Title = "Post Details";
+
+
+
 
     // Collect existing image paths
     var images = new List<string>();
@@ -41,14 +65,48 @@
 
     <p class="text-gray-600">Published: @Model.CreatedAt.ToLongDateString()</p>
 
-    <a href="@Url.Action("Index", "Home")"
-       class="inline-block mt-8 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-        Back to list
-    </a>
+    <div class="flex justify-between items-center mt-4">
+        <a href="@Url.Action("Index", "Home")" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center">
+            Back to list
+        </a>
+
+        @{
+            string buttonText = isFavorite ? "Remove from Favorites" : "Add to Favorites";
+            string isFavoriteAttr = isFavorite ? "true" : "false";
+        }
+
+        <span id="add-to-favorites"
+              class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center cursor-pointer"
+              data-post-id="@Model.Id"
+              data-is-favorite="@isFavoriteAttr">
+    @buttonText
+</span>
+
+
+    </div>
 </div>
 
 @section Scripts {
     <script>
+
+        document.getElementById("add-to-favorites").addEventListener("click", function () {
+            const btn = this;
+            const postId = btn.getAttribute("data-post-id");
+            const isFavorite = btn.getAttribute("data-is-favorite") === "true";
+
+            fetch(`/Post/ToggleFavorite/${postId}`, {
+                method: "POST"
+            }).then(res => {
+                if (res.ok) {
+                    const newState = !isFavorite;
+                    btn.setAttribute("data-is-favorite", newState ? "true" : "false");
+                    btn.textContent = newState ? "Remove from Favorites" : "Add to Favorites";
+                } else {
+                    alert("Something went wrong.");
+                }
+            });
+        });
+
         // Функция для увеличения и уменьшения изображения
         let images = document.querySelectorAll('.click-to-enlarge');
         let overlay = document.createElement('div');
@@ -83,5 +141,6 @@
         overlay.addEventListener('click', function () {
             overlay.style.display = 'none';
         });
+    
     </script>
 }

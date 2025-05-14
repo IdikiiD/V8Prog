@@ -4,16 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Azure.Core;
+using v8proj.Core.Entities;
 using v8proj.DAL;
 using v8proj.Core.Model;
 using v8proj.Web.Model.ViewModels;
+using System.Data.Entity;
+
 
 namespace v8proj.Controllers
 {
     public class PostController : Controller
     {
-        
-        
+
+
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
         // GET: Post/Create
@@ -25,7 +29,7 @@ namespace v8proj.Controllers
 
         // GET: Post/Details/5
         public ActionResult Details(int id)
-        
+
         {
             var post = _context.Posts.Find(id);
             if (post == null) return HttpNotFound();
@@ -33,13 +37,15 @@ namespace v8proj.Controllers
             // Отображение изображений как Base64
             if (!string.IsNullOrEmpty(post.ImagePath1))
             {
-                
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content/Uploads/Posts", Path.GetFileName(post.ImagePath1));
+
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content/Uploads/Posts",
+                    Path.GetFileName(post.ImagePath1));
                 if (System.IO.File.Exists(path))
                 {
                     ViewBag.Image1Base64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(path));
                 }
             }
+
             if (!string.IsNullOrEmpty(post.ImagePath2))
             {
                 var path = Server.MapPath("~" + post.ImagePath2);
@@ -48,6 +54,7 @@ namespace v8proj.Controllers
                     ViewBag.Image2Base64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(path));
                 }
             }
+
             if (!string.IsNullOrEmpty(post.ImagePath3))
             {
                 var path = Server.MapPath("~" + post.ImagePath3);
@@ -107,7 +114,7 @@ namespace v8proj.Controllers
             }
         }
 
-        
+
         private string ProcessUploadedFile(HttpPostedFileBase file, string fieldName)
         {
             if (file == null || file.ContentLength == 0)
@@ -126,7 +133,7 @@ namespace v8proj.Controllers
                 ModelState.AddModelError(fieldName, "Допустимы только файлы изображений (JPG, JPEG, PNG, GIF).");
                 return null;
             }
-            
+
 
             try
             {
@@ -155,8 +162,8 @@ namespace v8proj.Controllers
             }
         }
 
-            
-        
+
+
         // Проверка расширения файла
         private bool IsValidImage(HttpPostedFileBase file)
         {
@@ -171,8 +178,10 @@ namespace v8proj.Controllers
             {
                 _context.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         public ActionResult Image(string file)
         {
             if (string.IsNullOrEmpty(file))
@@ -186,6 +195,58 @@ namespace v8proj.Controllers
             var mimeType = MimeMapping.GetMimeMapping(path);
             return File(path, mimeType);
         }
+        
+        
+
+        // Отображение избранных постов
+        public ActionResult Favorites()
+        {
+            var userEmail = Request.Cookies["UserEmail"]?.Value;
+            if (string.IsNullOrEmpty(userEmail))
+                return RedirectToAction("SignIn", "Auth");
+
+            var user = _context.Users
+                .Include(u => u.FavoritePosts)
+                .FirstOrDefault(u => u.Email == userEmail);
+
+            if (user == null)
+                return HttpNotFound();
+
+            var favorites = user.FavoritePosts.ToList();
+            return View(favorites);
+        }
+
+        // Метод для добавления/удаления поста из избранного
+        [HttpPost]
+        public ActionResult ToggleFavorite(int id)
+        {
+            var userEmailCookie = Request.Cookies["UserEmail"];
+            if (userEmailCookie == null)
+                return new HttpStatusCodeResult(401, "Unauthorized");
+
+            var userEmail = userEmailCookie.Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+            if (user == null)
+                return new HttpStatusCodeResult(401, "Unauthorized");
+
+            var post = _context.Posts.Include(p => p.FavoritedBy).FirstOrDefault(p => p.Id == id);
+            if (post == null)
+                return HttpNotFound();
+
+            if (post.FavoritedBy.Any(u => u.UserId == user.UserId))
+            {
+                post.FavoritedBy.Remove(user);
+            }
+            else
+            {
+                post.FavoritedBy.Add(user);
+            }
+
+            _context.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
     }
-    
 }
+

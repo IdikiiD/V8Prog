@@ -26,6 +26,46 @@
         }
     </div>
 
+    @if (!string.IsNullOrEmpty(Request["category"]))
+    {
+        <h2 class="text-2xl font-bold text-center text-blue-700 mb-4">
+            Категория: @Request["category"]
+        </h2>
+    }
+
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet"/>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.add-to-favorites').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const postId = this.getAttribute('data-post-id');
+                        const btn = this;
+
+                        fetch(`/Post/ToggleFavorite?postId=${postId}`, {
+                            method: 'POST'
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    toastr.success('Пост добавлен в избранное');
+                                    btn.textContent = 'Добавлено';
+                                    btn.disabled = true;
+                                } else {
+                                    toastr.error(data.message || 'Ошибка при добавлении');
+                                }
+                            })
+                            .catch(() => {
+                                toastr.error('Ошибка запроса');
+                            });
+                    });
+                });
+            });
+        </script>
+    }
+
     <h2 class="text-2xl font-bold mt-10 mb-4">Посты</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach (var post in Model.Posts)
@@ -49,15 +89,18 @@
                             Подробнее
                         </a>
                     </div>
-                    <p class="text-gray-600">@post.Category</p>
+                    <p class="text-gray-600 mb-4">@post.Category</p>
+
+                   
                 </div>
             </div>
         }
-    </div>
 
-    <a href="@Url.Action("Create", "Post")" style="position: fixed; bottom: 20px; right: 20px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 50%; text-align: center; font-size: 24px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        +
-    </a>
+
+        <a href="@Url.Action("Create", "Post")" style="position: fixed; bottom: 20px; right: 20px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 50%; text-align: center; font-size: 24px; text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            +
+        </a>
     
+    </div>
 </div>
 

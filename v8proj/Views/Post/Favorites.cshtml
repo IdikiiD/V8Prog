@@ -1,0 +1,99 @@
+@model IEnumerable<v8proj.Core.Entities.Post>
+
+@{
+    ViewBag.Title = "Favorite Posts";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center">Your Favorite Posts</h1>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center text-lg text-gray-600">You have no favorite posts yet.</p>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var post in Model)
+            {
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden post" id="post-@post.Id">
+
+                    @if (!string.IsNullOrEmpty(post.ImagePath1))
+                    {
+                        <!-- Указываем правильный путь к изображению в папке /Content/Uploads/Posts -->
+                        <img src="@Url.Action("Image", "Post", new { file = System.IO.Path.GetFileName(post.ImagePath1) })"
+                             alt="@post.Title" class="w-full h-48 object-cover rounded-t-lg" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/default-image.jpg" alt="Default image" class="w-full h-48 object-cover rounded-t-lg"/>
+                    }
+
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold mb-2">@post.Title</h2>
+                        <p class="text-gray-600 mb-4">@post.Category</p>
+
+                        <a href="@Url.Action("Details", "Post", new { id = post.Id })" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm mb-4 inline-block">
+                            MORE
+                        </a>
+
+                        <!-- Кнопка удаления из избранного -->
+                        <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition remove-from-favorites"
+                                data-post-id="@post.Id">
+                            Remove from Favorites
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <!-- Подключение библиотеки Toastr для уведомлений -->
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet"/>
+
+    <script>
+        document.querySelectorAll('.remove-from-favorites').forEach(button => {
+            button.addEventListener('click', function () {
+                const postId = this.getAttribute('data-post-id');
+
+                if (!confirm("Are you sure you want to remove this post from your favorites?")) {
+                    return;
+                }
+
+                fetch(`/Post/ToggleFavorite/${postId}`, {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            toastr.success('Пост удалён из избранного');
+
+                            // Немедленно удаляем элемент после подтверждения
+                            const postElement = document.getElementById(`post-${postId}`);
+                            if (postElement) {
+                                postElement.remove(); // Удаляем элемент сразу
+                            }
+
+                            // Если больше нет избранных, показать сообщение
+                            if (document.querySelectorAll('.remove-from-favorites').length === 1) {
+                                document.querySelector('.grid')?.remove();
+                                const emptyMsg = document.createElement('p');
+                                emptyMsg.className = "text-center text-lg text-gray-600";
+                                emptyMsg.textContent = "You have no favorite posts yet.";
+                                document.querySelector('.container')?.appendChild(emptyMsg);
+                            }
+
+                        } else {
+                            toastr.error('Ошибка при удалении из избранного');
+                        }
+                    })
+                    .catch(error => {
+                        toastr.error('Произошла ошибка при выполнении запроса.');
+                    });
+            });
+        });
+    </script>
+}

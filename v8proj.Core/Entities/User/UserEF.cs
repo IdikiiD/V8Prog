@@ -19,6 +19,11 @@ namespace v8proj.Core.Entities.User
         public AccountVerificationStatus IsVerified { get; set; } = AccountVerificationStatus.NotVerified;
         public SignUpForLettersStatus IsSignUpForLetters { get; set; } = SignUpForLettersStatus.No;
         
+
+        
+        public virtual ICollection<Post> FavoritePosts { get; set; } = new List<Post>();
+
+        
         
         
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using v8proj.Core.Entities;
 
 namespace v8proj.Web.Model.ViewModels
 {
