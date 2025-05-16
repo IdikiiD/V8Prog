@@ -128,6 +128,22 @@ namespace v8proj.BissnessLogic.Services.User
                 return new BaseResponse<bool>(false, OperationStatus.Error, "Error occured while unbanning user.");
             }
         }
+
+        // Добавленный метод
+        public async Task<BaseResponse<bool>> UpdatePhoneNumberAsync(int userId, string phoneNumber)
+        {
+            var userEf = await _usersRepository.GetByIdAsync(userId);
+            if (userEf == null)
+            {
+                return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
+            }
+
+            userEf.PhoneNumber = phoneNumber;
+            var updatedUser = await _usersRepository.UpdateAsync(userEf);
+
+            return updatedUser != null ?
+                new BaseResponse<bool>(true, OperationStatus.Success, "Phone number updated successfully.") :
+                new BaseResponse<bool>(false, OperationStatus.Error, "Failed to update phone number.");
+        }
     }
 }
-

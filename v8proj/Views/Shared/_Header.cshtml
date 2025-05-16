@@ -13,8 +13,7 @@
 
             @if (Request.Cookies["UserEmail"] != null)
             {
-                <a href="@Url.Action("Profile", "Home")" class="text-black hover:text-gray-700">Профиль</a>
-
+                <a href="@Url.Action("Index", "Profile")" class="text-black hover:text-gray-700">Профиль</a>
                 // --- НАЧАЛО: Проверка роли администратора (через cookie UserRole) ---
                 if (Request.Cookies["UserRole"]?.Value == "Admin")
                 {

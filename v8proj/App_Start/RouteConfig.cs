@@ -34,6 +34,12 @@ namespace v8proj
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
                 
             );
+            routes.MapRoute(
+                name: "Support",
+                url: "Support/{action}/{id}",
+                defaults: new { controller = "Support", action = "Support", id = UrlParameter.Optional }
+            );
+
         }
     }
 }

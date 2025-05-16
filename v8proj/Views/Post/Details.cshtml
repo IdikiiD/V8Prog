@@ -2,15 +2,12 @@
 @model Post
 
 @{
-
     var userEmailCookie = Request.Cookies["UserEmail"];
     int? currentUserId = null;
 
     if (userEmailCookie != null)
     {
         var userEmail = userEmailCookie.Value;
-
-        // Используем UserService или репозиторий (можно сделать прямой SQL-запрос в контроллере, если не хочешь сюда логику тянуть)
         var db = new v8proj.DAL.ApplicationDbContext();
         var currentUser = db.Users.FirstOrDefault(u => u.Email == userEmail);
         if (currentUser != null)
@@ -22,13 +19,8 @@
     bool isFavorite = Model.FavoritedBy?.Any(u => u.UserId == currentUserId) ?? false;
     string heartClass = isFavorite ? "bi-heart-fill" : "bi-heart";
 
-
     ViewBag.Title = "Post Details";
 
-
-
-
-    // Collect existing image paths
     var images = new List<string>();
     if (!string.IsNullOrEmpty(Model.ImagePath1)) { images.Add(Model.ImagePath1); }
     if (!string.IsNullOrEmpty(Model.ImagePath2)) { images.Add(Model.ImagePath2); }
@@ -67,8 +59,14 @@
 
     <div class="flex justify-between items-center mt-4">
         <a href="@Url.Action("Index", "Home")" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center">
-            Back to list
+            Back to List
         </a>
+        <!-- Кнопка "Поддержать автора" -->
+        <button type="button"
+                class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded ml-4"
+                data-bs-toggle="modal" data-bs-target="#supportModal">
+            Support the Author
+        </button>
 
         @{
             string buttonText = isFavorite ? "Remove from Favorites" : "Add to Favorites";
@@ -79,68 +77,136 @@
               class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center cursor-pointer"
               data-post-id="@Model.Id"
               data-is-favorite="@isFavoriteAttr">
-    @buttonText
-</span>
-
-
+            @buttonText
+        </span>
     </div>
 </div>
 
+<!-- Модальное окно Поддержки -->
+<div class="modal fade" id="supportModal" tabindex="-1" role="dialog" aria-labelledby="supportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="supportModalLabel">Support the Author</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" action="/Support/Support"> <!-- Путь /Support/Support, что соответствует методу -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="amount">Amount (₽):</label>
+                        <input type="number" class="form-control" id="amount" name="Amount" required min="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comment">Comment (optional):</label>
+                        <textarea class="form-control" id="comment" name="Comment"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number (16 digits):</label>
+                        <input type="text" class="form-control" id="cardNumber" name="CardNumber" required maxlength="16" pattern="\d{16}" placeholder="0000 0000 0000 0000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date:</label>
+                        <div class="d-flex">
+                            <input type="number" class="form-control" id="expiryMonth" name="ExpiryMonth" required maxlength="2" placeholder="MM" min="01" max="12" pattern="\d{2}" style="width: 80px;">
+                            <span class="mx-2">/</span>
+                            <input type="number" class="form-control" id="expiryYear" name="ExpiryYear" required maxlength="2" placeholder="YY" min="22" max="99" pattern="\d{2}" style="width: 80px;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cvv">CVV:</label>
+                        <input type="text" class="form-control" id="cvv" name="CVV" required maxlength="3" pattern="\d{3}" placeholder="123">
+                    </div>
+
+                    <input type="hidden" name="PostId" value="@Model.Id" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Support</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const supportBtn = document.getElementById("supportBtn");
+            if (supportBtn) {
+                supportBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    document.getElementById("supportForm").submit();
+                    setTimeout(function() {
+                        window.location.href = '/thankyou.html';
+                    }, 2000);
+                });
+            }
 
-        document.getElementById("add-to-favorites").addEventListener("click", function () {
-            const btn = this;
-            const postId = btn.getAttribute("data-post-id");
-            const isFavorite = btn.getAttribute("data-is-favorite") === "true";
+            const addToFavoritesBtn = document.getElementById("add-to-favorites");
+            if (addToFavoritesBtn) {
+                addToFavoritesBtn.addEventListener("click", function () {
+                    const btn = this;
+                    const postId = btn.getAttribute("data-post-id");
+                    const isFavorite = btn.getAttribute("data-is-favorite") === "true";
 
-            fetch(`/Post/ToggleFavorite/${postId}`, {
-                method: "POST"
-            }).then(res => {
-                if (res.ok) {
-                    const newState = !isFavorite;
-                    btn.setAttribute("data-is-favorite", newState ? "true" : "false");
-                    btn.textContent = newState ? "Remove from Favorites" : "Add to Favorites";
-                } else {
-                    alert("Something went wrong.");
-                }
+                    fetch(`/Post/ToggleFavorite/${postId}`, {
+                        method: "POST"
+                    }).then(res => {
+                        if (res.ok) {
+                            const newState = !isFavorite;
+                            btn.setAttribute("data-is-favorite", newState ? "true" : "false");
+                            btn.textContent = newState ? "Remove from Favorites" : "Add to Favorites";
+                        } else {
+                            alert("Something went wrong.");
+                        }
+                    });
+                });
+            }
+
+            const images = document.querySelectorAll('.click-to-enlarge');
+            images.forEach(img => {
+                img.addEventListener('click', function () {
+                    let overlay = document.createElement('div');
+                    overlay.style.position = 'fixed';
+                    overlay.style.top = '0';
+                    overlay.style.left = '0';
+                    overlay.style.width = '100vw';
+                    overlay.style.height = '100vh';
+                    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                    overlay.style.display = 'none';
+                    overlay.style.justifyContent = 'center';
+                    overlay.style.alignItems = 'center';
+                    overlay.style.zIndex = '9999';
+                    document.body.appendChild(overlay);
+
+                    let largeImage = document.createElement('img');
+                    largeImage.src = img.src;
+                    largeImage.style.maxWidth = '90%';
+                    largeImage.style.maxHeight = '90%';
+                    largeImage.style.borderRadius = '10px';
+                    largeImage.style.objectFit = 'contain';
+                    overlay.innerHTML = '';
+                    overlay.appendChild(largeImage);
+                    overlay.style.display = 'flex';
+
+                    overlay.addEventListener('click', function () {
+                        overlay.style.display = 'none';
+                        overlay.remove(); // Очищаем overlay при закрытии
+                    });
+                    document.body.appendChild(overlay); // Добавляем overlay в DOM
+                });
             });
         });
-
-        // Функция для увеличения и уменьшения изображения
-        let images = document.querySelectorAll('.click-to-enlarge');
-        let overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-        overlay.style.display = 'none';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '9999';
-        document.body.appendChild(overlay);
-
-        // Обработчик клика по изображению
-        images.forEach(img => {
-            img.addEventListener('click', function () {
-                let largeImage = document.createElement('img');
-                largeImage.src = img.src;
-                largeImage.style.maxWidth = '90%';
-                largeImage.style.maxHeight = '90%';
-                largeImage.style.borderRadius = '10px';
-                largeImage.style.objectFit = 'contain';
-                overlay.innerHTML = ''; // очищаем старое изображение
-                overlay.appendChild(largeImage);
-                overlay.style.display = 'flex';
-            });
-        });
-
-        // Обработчик клика на пустое место для уменьшения изображения
-        overlay.addEventListener('click', function () {
-            overlay.style.display = 'none';
-        });
-    
     </script>
-}
+}}

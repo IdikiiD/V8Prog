@@ -14,10 +14,10 @@ namespace v8proj.BissnessLogic.Interfaces.User
         Task<BaseResponse<bool>> DeleteUserByIdAsync(int id);
         Task<BaseResponse<UserDto>> GetUserByIdAsync(int id);
         Task<BaseResponse<UserDto>> GetUserByEmailAsync(string email);
-        // --- ИЗМЕНЕНИЕ НАЧАЛО ---
         Task<BaseResponse<List<UserDto>>> GetUsersAsync(string searchTerm, UserType userType, int currentPage, int amountOfUsers);
-        // --- ИЗМЕНЕНИЕ КОНЕЦ ---
         Task<BaseResponse<bool>> BanUserAsync(int userId);
         Task<BaseResponse<bool>> UnbanUserAsync(int userId);
+        Task<BaseResponse<bool>> UpdatePhoneNumberAsync(int userId, string phoneNumber);
+
     }
 }
