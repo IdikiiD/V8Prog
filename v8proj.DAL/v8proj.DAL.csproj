@@ -61,7 +61,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Migrations\202505261952551_InitialCreateNew.cs" />
     <Compile Include="Migrations\202505261952551_InitialCreateNew.Designer.cs">
       <DependentUpon>202505261952551_InitialCreateNew.cs</DependentUpon>

@@ -1,39 +1,36 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using v8proj.DAL;
 using v8proj.Web.Model;
 using v8proj.Web.Model.ViewModels;
-using v8proj.Core.Model; 
-
+using v8proj.Core.Entities; 
+using v8proj.BissnessLogic.Interfaces.Home;
+using v8proj.BissnessLogic.Services.Home;
 
 namespace v8proj.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context = new ApplicationDbContext(); // Подключение к базе
+        
+
+        private readonly IHomeService _homeService; 
+
+        
+        public HomeController(IHomeService homeService)
+        {
+            _homeService = homeService;
+        }
 
         public ActionResult Index(string category)
         {
-            var cars = _context.eUseControl.ToList();
-
-            var postsQuery = _context.Posts.AsQueryable();
-
-            if (!string.IsNullOrEmpty(category))
-            {
-                postsQuery = postsQuery.Where(p => p.Category == category);
-            }
-
-            var posts = postsQuery
-                .Where(p => !string.IsNullOrEmpty(p.ImagePath1))
-                .OrderByDescending(p => p.CreatedAt) // ← это ключевой момент
-                .ToList();
-
+        
+            var cars = _homeService.GetCars();
+            var posts = _homeService.GetPosts(category);
 
             foreach (var post in posts)
             {
                 if (string.IsNullOrEmpty(post.ImagePath1))
                 {
-                    post.ImagePath1 = "/Content/Uploads/Posts/no-image.png"; // Заглушка
+                    post.ImagePath1 = "/Content/Uploads/Posts/no-image.png"; 
                 }
             }
 
@@ -45,8 +42,7 @@ namespace v8proj.Controllers
 
             return View(viewModel);
         }
-
-
+        
         public ActionResult Cart() => View();
         public ActionResult SignUp() => View("~/Views/Auth/SignUp.cshtml");
         public ActionResult SignIn() => View("~/Views/Auth/SignIn.cshtml");

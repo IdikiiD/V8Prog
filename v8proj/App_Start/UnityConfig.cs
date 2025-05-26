@@ -1,5 +1,4 @@
 using System;
-using System.Web.ApplicationServices;
 using System.Web.Mvc;
 using Unity;
 using Unity.Mvc5;
@@ -10,10 +9,13 @@ using v8proj.BissnessLogic.Interfaces.User;
 using v8proj.BissnessLogic.Services.JWTService;
 using v8proj.BissnessLogic.Services.User;
 using v8proj.Core.Interface.User;
-
 using v8proj.DAL;
 using v8proj.DAL.Repositories.User;
 using AuthenticationService = v8proj.BissnessLogic.Services.AuthentificationService.AuthenticationService;
+using v8proj.BissnessLogic.Interfaces.Home;
+using v8proj.BissnessLogic.Services.Home;
+using v8proj.BissnessLogic.Interfaces.Posts;
+using v8proj.BissnessLogic.Services.Posts;
 
 namespace v8proj
 {
@@ -33,15 +35,8 @@ namespace v8proj
 
         #endregion
 
-
         public static void RegisterTypes(IUnityContainer container)
         {
-            /*
-             * NOTE: To load from web.config uncomment the line below.
-             * Make sure to add a Unity.Configuration to the using statements.
-             *container.LoadConfiguration();
-             */
-
             RegisterDbContext(container);
             RegisterRepositories(container);
             RegisterServices(container);
@@ -49,20 +44,21 @@ namespace v8proj
 
         private static void RegisterServices(IUnityContainer container)
         {
-            //bll
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<IJwtService, JwtService>();
-
-            //infrastructure
             container.RegisterType<ICookiesService, CookiesServices>();
 
+   
+            container.RegisterType<IEUseControlService, EUseControlService>();
+            container.RegisterType<IPostService, PostService>();
+            container.RegisterType<IHomeService, HomeService>();
+            container.RegisterType<IAuthentificationSrevice, AuthenticationService>(); 
         }
 
         private static void RegisterRepositories(IUnityContainer container)
         {
             container.RegisterType<IUsersRepository, UsersRepository>();
-            container.RegisterType<IAuthentificationSrevice, AuthenticationService>();
-
+          
         }
 
         private static void RegisterDbContext(IUnityContainer container)
