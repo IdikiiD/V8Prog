@@ -61,17 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202505141257589_InitialCreate.cs" />
-    <Compile Include="Migrations\202505141257589_InitialCreate.Designer.cs">
-      <DependentUpon>202505141257589_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202505141529195_AddAvatarToUserEf.cs" />
-    <Compile Include="Migrations\202505141529195_AddAvatarToUserEf.Designer.cs">
-      <DependentUpon>202505141529195_AddAvatarToUserEf.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202505142059119_AddedPhoneNumberAndRegistrationDateToUser.cs" />
-    <Compile Include="Migrations\202505142059119_AddedPhoneNumberAndRegistrationDateToUser.Designer.cs">
-      <DependentUpon>202505142059119_AddedPhoneNumberAndRegistrationDateToUser.cs</DependentUpon>
+    <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Migrations\202505261952551_InitialCreateNew.cs" />
+    <Compile Include="Migrations\202505261952551_InitialCreateNew.Designer.cs">
+      <DependentUpon>202505261952551_InitialCreateNew.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,14 +85,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202505141257589_InitialCreate.resx">
-      <DependentUpon>202505141257589_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202505141529195_AddAvatarToUserEf.resx">
-      <DependentUpon>202505141529195_AddAvatarToUserEf.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202505142059119_AddedPhoneNumberAndRegistrationDateToUser.resx">
-      <DependentUpon>202505142059119_AddedPhoneNumberAndRegistrationDateToUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202505261952551_InitialCreateNew.resx">
+      <DependentUpon>202505261952551_InitialCreateNew.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

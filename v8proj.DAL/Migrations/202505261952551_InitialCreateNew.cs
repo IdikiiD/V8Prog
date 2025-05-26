@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class InitialCreateNew : DbMigration
     {
         public override void Up()
         {
@@ -31,7 +31,6 @@
                         ImagePath2 = c.String(),
                         ImagePath3 = c.String(),
                         CreatedAt = c.DateTime(nullable: false),
-                        PostId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -43,6 +42,9 @@
                         FullName = c.String(),
                         Email = c.String(),
                         PasswordHash = c.String(),
+                        AvatarUrl = c.String(),
+                        PhoneNumber = c.String(),
+                        RegistrationDate = c.DateTime(nullable: false),
                         DateRegistered = c.DateTime(nullable: false),
                         UserType = c.Int(nullable: false),
                         UserStatus = c.Int(nullable: false),

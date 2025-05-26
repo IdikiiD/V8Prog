@@ -247,8 +247,5 @@ namespace v8proj.Controllers
             return Json(new { success = true });
         }
 
-        
-        
     }
 }
-

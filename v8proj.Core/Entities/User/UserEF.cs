@@ -13,16 +13,9 @@ namespace v8proj.Core.Entities.User
         public string FullName { get; set; } = "";
         public string Email { get; set; } = "";
         public string PasswordHash { get; set; } = "";
-        
         public string AvatarUrl { get; set; }
-        
         public string PhoneNumber { get; set; }
-        public DateTime RegistrationDate { get; set; }
-
-
-        
-
-        
+        public DateTime RegistrationDate { get; set; } = DateTime.UtcNow; 
         public DateTime DateRegistered { get; set; } = DateTime.UtcNow;
         public UserType UserType { get; set; } = UserType.User;
         public EntityStatus UserStatus { get; set; } = EntityStatus.Active;
@@ -30,11 +23,7 @@ namespace v8proj.Core.Entities.User
         public SignUpForLettersStatus IsSignUpForLetters { get; set; } = SignUpForLettersStatus.No;
         
         public virtual ICollection<Post> FavoritePosts { get; set; } = new List<Post>();
-        
-        
-
-        
-        
+       
         
     }
 }

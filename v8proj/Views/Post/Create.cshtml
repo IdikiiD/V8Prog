@@ -12,14 +12,20 @@
         {
             @Html.AntiForgeryToken()
 
+            @* Добавляем ValidationSummary для отображения общих ошибок и ошибок, не привязанных к конкретным полям *@
+            @Html.ValidationSummary(false, "", new { @class = "text-red-500 mb-4 list-disc list-inside" })
+
             <div class="mb-4">
                 <label class="block font-semibold mb-1">Title</label>
                 @Html.TextBoxFor(m => m.Title, new { @class = "w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" })
+                @* Добавляем ValidationMessageFor для отображения ошибок конкретного поля *@
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-red-500 text-sm" })
             </div>
 
             <div class="mb-4">
                 <label class="block font-semibold mb-1">Description</label>
                 @Html.TextAreaFor(m => m.Description, new { @class = "w-full border rounded-lg px-3 py-2 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-green-400" })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-red-500 text-sm" })
             </div>
 
             <div class="mb-4">
@@ -31,21 +37,25 @@
                         <option value="@category">@category</option>
                     }
                 </select>
+                @Html.ValidationMessageFor(m => m.Category, "", new { @class = "text-red-500 text-sm" })
             </div>
 
             <div class="mb-4">
                 <label class="block font-semibold mb-1">Photo 1</label>
-                <input type="file" name="Image1" class="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200" />
+                <input type="file" name="Image1" id="fileInput1" class="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200" />
+                @Html.ValidationMessageFor(m => m.Image1, "", new { @class = "text-red-500 text-sm" })
             </div>
 
             <div class="mb-4">
                 <label class="block font-semibold mb-1">Photo 2</label>
-                <input type="file" name="Image2" class="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200" />
+                <input type="file" name="Image2" id="fileInput2" class="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200" />
+                @Html.ValidationMessageFor(m => m.Image2, "", new { @class = "text-red-500 text-sm" })
             </div>
 
             <div class="mb-6">
                 <label class="block font-semibold mb-1">Photo 3</label>
-                <input type="file" name="Image3" class="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200" />
+                <input type="file" name="Image3" id="fileInput3" class="w-full border rounded-lg px-3 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200" />
+                @Html.ValidationMessageFor(m => m.Image3, "", new { @class = "text-red-500 text-sm" })
             </div>
 
             <button type="submit"

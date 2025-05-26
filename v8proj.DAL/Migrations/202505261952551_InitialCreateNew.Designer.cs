@@ -7,13 +7,13 @@ namespace v8proj.DAL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class AddAvatarToUserEf : IMigrationMetadata
+    public sealed partial class InitialCreateNew : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddAvatarToUserEf));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreateNew));
         
         string IMigrationMetadata.Id
         {
-            get { return "202505141529195_AddAvatarToUserEf"; }
+            get { return "202505261952551_InitialCreateNew"; }
         }
         
         string IMigrationMetadata.Source
