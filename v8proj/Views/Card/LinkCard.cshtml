@@ -1,0 +1,21 @@
+@{
+    ViewBag.Title = "Привязать карту";
+}
+
+<h2>Привязать карту</h2>
+
+<form method="post" action="@Url.Action("LinkCard", "User")">
+    <div>
+        <label>Номер карты:</label>
+        <input type="text" name="cardNumber" required />
+    </div>
+    <div>
+        <label>Срок действия:</label>
+        <input type="text" name="expirationDate" required />
+    </div>
+    <div>
+        <label>CVV:</label>
+        <input type="text" name="cvv" required />
+    </div>
+    <button type="submit">Привязать</button>
+</form>

@@ -9,16 +9,13 @@
             <a class="text-black hover:text-gray-300" href="@Url.Action("Categories", "Categories")">Категории</a>
             <a href="@Url.Action("Favorites", "Post")" class="text-black hover:text-gray-700">Избранное</a>
 
-
-
             @if (Request.Cookies["UserEmail"] != null)
             {
-                <a href="@Url.Action("Profile", "Home")" class="text-black hover:text-gray-700">Профиль</a>
-                
+                <a href="@Url.Action("Index", "Profile")" class="text-black hover:text-gray-700">Профиль</a>
+          
                 if (Request.Cookies["UserRole"]?.Value == "Admin")
                 {
                     <a href="@Url.Action("Dashboard", "Admin")" class="px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700">Dashboard</a>
-                   
                 }
 
                 <a href="@Url.Action("SignOut", "Auth")" class="text-black hover:text-gray-700">Выход</a>

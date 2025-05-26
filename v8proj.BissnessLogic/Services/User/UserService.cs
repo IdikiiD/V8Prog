@@ -9,7 +9,7 @@ using v8proj.Core.Enums;
 using v8proj.Core.Enums.User;
 using v8proj.Core.Interface.User;
 using v8proj.Core.Model.DTO.User;
-using v8proj.Web.Model.DTO; // Для BaseResponse
+using v8proj.Web.Model.DTO;
 using v8proj.Core.Enums.Entinity;
 
 namespace v8proj.BissnessLogic.Services.User
@@ -56,7 +56,7 @@ namespace v8proj.BissnessLogic.Services.User
 
         public async Task<BaseResponse<List<UserDto>>> GetUsersAsync(string searchTerm, UserType userType, int currentPage, int amountOfUsers)
         {
-            // Вызываем обновленный метод репозитория
+
             var userEfs = (await _usersRepository.GetPaginatedUsersBySearchTermAndTypeAsync(searchTerm, userType, currentPage, amountOfUsers)).ToList();
 
             if (!userEfs.Any())
@@ -64,7 +64,7 @@ namespace v8proj.BissnessLogic.Services.User
                 return new BaseResponse<List<UserDto>>(null, OperationStatus.Success, "Users not found");
             }
 
-            // Маппинг UserEf в UserDto
+
             var userDtos = userEfs.Select(userEf => Mapper.Map<UserEf, UserDto>(userEf)).ToList();
             return new BaseResponse<List<UserDto>>(userDtos, OperationStatus.Success, "Users got");
         }
@@ -139,7 +139,7 @@ namespace v8proj.BissnessLogic.Services.User
                     return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
                 }
 
-                userEf.UserType = UserType.Admin; // Устанавливаем тип пользователя в "Admin"
+                userEf.UserType = UserType.Admin;
                 await _usersRepository.UpdateAsync(userEf);
                 return new BaseResponse<bool>(true, OperationStatus.Success, "User is now an administrator.");
             }
@@ -168,8 +168,21 @@ namespace v8proj.BissnessLogic.Services.User
                 return new BaseResponse<bool>(false, OperationStatus.Error, $"Error: {ex.Message}");
             }
         }
-    }
-    
-    
-}
 
+        public async Task<BaseResponse<bool>> UpdatePhoneNumberAsync(int userId, string phoneNumber)
+        {
+            var userEf = await _usersRepository.GetByIdAsync(userId);
+            if (userEf == null)
+            {
+                return new BaseResponse<bool>(false, OperationStatus.Error, "User not found.");
+            }
+
+            userEf.PhoneNumber = phoneNumber;
+            var updatedUser = await _usersRepository.UpdateAsync(userEf);
+
+            return updatedUser != null ?
+                new BaseResponse<bool>(true, OperationStatus.Success, "Phone number updated successfully.") :
+                new BaseResponse<bool>(false, OperationStatus.Error, "Failed to update phone number.");
+        }
+    }
+}
