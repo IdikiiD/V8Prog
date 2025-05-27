@@ -61,13 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202505261952551_InitialCreateNew.cs" />
-    <Compile Include="Migrations\202505261952551_InitialCreateNew.Designer.cs">
-      <DependentUpon>202505261952551_InitialCreateNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202505271350398_AddSupportTable.cs" />
-    <Compile Include="Migrations\202505271350398_AddSupportTable.Designer.cs">
-      <DependentUpon>202505271350398_AddSupportTable.cs</DependentUpon>
+    <Compile Include="Migrations\202505271633010_InitialCreateNew.cs" />
+    <Compile Include="Migrations\202505271633010_InitialCreateNew.Designer.cs">
+      <DependentUpon>202505271633010_InitialCreateNew.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,11 +85,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202505261952551_InitialCreateNew.resx">
-      <DependentUpon>202505261952551_InitialCreateNew.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202505271350398_AddSupportTable.resx">
-      <DependentUpon>202505271350398_AddSupportTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202505271633010_InitialCreateNew.resx">
+      <DependentUpon>202505271633010_InitialCreateNew.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

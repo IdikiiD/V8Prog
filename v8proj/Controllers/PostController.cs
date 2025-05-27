@@ -5,21 +5,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using v8proj.Core.Entities;
-using v8proj.Core.Model; // Вероятно, это Model.DTO.User
+using v8proj.Core.Model; 
 using v8proj.Web.Model.ViewModels;
-using v8proj.BissnessLogic.Interfaces.Posts; // Добавьте эту строку для IPostService
-using v8proj.BissnessLogic.Interfaces.User; // Добавьте эту строку для IUserService
+using v8proj.BissnessLogic.Interfaces.Posts;
+using v8proj.BissnessLogic.Interfaces.User; 
 
 namespace v8proj.Controllers
 {
     public class PostController : Controller
     {
-        // УДАЛИЛИ: private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-        private readonly IPostService _postService; // Теперь мы инжектируем IPostService
-        private readonly IUserService _userService; // Инжектируем IUserService, так как он используется
-
-        // НОВЫЙ КОНСТРУКТОР: Unity будет использовать его для создания PostController
+        private readonly IPostService _postService; 
+        private readonly IUserService _userService; 
+        
         public PostController(IPostService postService, IUserService userService)
         {
             _postService = postService;
@@ -36,11 +34,9 @@ namespace v8proj.Controllers
         // GET: Post/Details/5
         public ActionResult Details(int id)
         {
-            // Используем _postService для получения поста
             var post = _postService.GetPostById(id);
             if (post == null) return HttpNotFound();
-
-            // Логика работы с файлами (не связана с DbContext, остается здесь или в отдельном сервисе)
+            
             if (!string.IsNullOrEmpty(post.ImagePath1))
             {
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content/Uploads/Posts",
@@ -102,8 +98,8 @@ namespace v8proj.Controllers
                     return View(model);
                 }
 
-                _postService.AddPost(post);      // Используем сервис для добавления поста
-                _postService.SaveChanges();      // Используем сервис для сохранения изменений
+                _postService.AddPost(post);      
+                _postService.SaveChanges();      
 
                 return RedirectToAction("Index", "Home");
             }
@@ -115,12 +111,9 @@ namespace v8proj.Controllers
                 return View(model);
             }
         }
-
-        // Методы ProcessUploadedFile, IsValidImage, Image остаются без изменений,
-        // так как они не работают напрямую с DbContext.
+        
         private string ProcessUploadedFile(HttpPostedFileBase file, string fieldName)
         {
-            // ... (оставьте этот код без изменений)
             if (file == null || file.ContentLength == 0)
                 return null;
 
@@ -162,18 +155,13 @@ namespace v8proj.Controllers
 
         private bool IsValidImage(HttpPostedFileBase file)
         {
-            // ... (оставьте этот код без изменений)
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
             var fileExtension = Path.GetExtension(file.FileName).ToLower();
             return allowedExtensions.Contains(fileExtension);
         }
-
-        // МЕТОД DISPOSE УДАЛЕН. Unity управляет жизненным циклом DbContext.
-        // protected override void Dispose(bool disposing) { ... }
-
+        
         public ActionResult Image(string file)
         {
-            // ... (оставьте этот код без изменений)
             if (string.IsNullOrEmpty(file))
                 return HttpNotFound();
 
@@ -185,15 +173,13 @@ namespace v8proj.Controllers
             var mimeType = MimeMapping.GetMimeMapping(path);
             return File(path, mimeType);
         }
-
-        // Отображение избранных постов
+        
         public ActionResult Favorites()
         {
             var userEmail = Request.Cookies["UserEmail"]?.Value;
             if (string.IsNullOrEmpty(userEmail))
                 return RedirectToAction("SignIn", "Auth");
 
-            // Используем _postService для получения пользователя с избранным
             var user = _postService.GetUserWithFavorites(userEmail);
 
             if (user == null)
@@ -213,13 +199,12 @@ namespace v8proj.Controllers
 
             var userEmail = userEmailCookie.Value;
 
-            // Используем _postService для получения пользователя с избранным
             var user = _postService.GetUserWithFavorites(userEmail);
 
             if (user == null)
                 return new HttpStatusCodeResult(401, "Unauthorized");
 
-            var post = _postService.GetPostWithFavorites(id); // Используем сервис
+            var post = _postService.GetPostWithFavorites(id); 
             if (post == null)
                 return HttpNotFound();
 
@@ -232,7 +217,7 @@ namespace v8proj.Controllers
                 post.FavoritedBy.Add(user);
             }
 
-            _postService.SaveChanges(); // Используем сервис
+            _postService.SaveChanges(); 
 
             return Json(new { success = true });
         }

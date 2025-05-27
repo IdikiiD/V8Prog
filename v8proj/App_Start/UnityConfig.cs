@@ -47,10 +47,8 @@ namespace v8proj
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<IJwtService, JwtService>();
             container.RegisterType<ICookiesService, CookiesServices>();
-
-   
             container.RegisterType<IEUseControlService, EUseControlService>();
-            container.RegisterType<IPostService, PostService>();
+            container.RegisterType<IPostService, PostService>(); 
             container.RegisterType<IHomeService, HomeService>();
             container.RegisterType<IAuthentificationSrevice, AuthenticationService>(); 
         }
@@ -58,8 +56,10 @@ namespace v8proj
         private static void RegisterRepositories(IUnityContainer container)
         {
             container.RegisterType<IUsersRepository, UsersRepository>();
-            container.RegisterType<IAuthentificationSrevice, AuthenticationService>();
-            container.RegisterType<v8proj.Core.Interface.Support.ISupportRepository, v8proj.DAL.Repositories.SupportRepository>();
+        }
+
+        private static void RegisterDbContext(IUnityContainer container)
+        {
             container.RegisterType<ApplicationDbContext>();
         }
     }
