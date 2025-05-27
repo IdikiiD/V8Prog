@@ -14,6 +14,8 @@ namespace v8proj.DAL
         public ApplicationDbContext() : base("DefaultConnection")
         {
         }
+        
+        public DbSet<Support> Supports { get; set; }
 
         public DbSet<eUseControl> eUseControl { get; set; }
 

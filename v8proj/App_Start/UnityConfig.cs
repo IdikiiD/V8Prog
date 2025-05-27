@@ -62,6 +62,7 @@ namespace v8proj
         {
             container.RegisterType<IUsersRepository, UsersRepository>();
             container.RegisterType<IAuthentificationSrevice, AuthenticationService>();
+            container.RegisterType<v8proj.Core.Interface.Support.ISupportRepository, v8proj.DAL.Repositories.SupportRepository>();
 
         }
 
