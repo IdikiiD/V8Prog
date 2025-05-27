@@ -58,11 +58,8 @@ namespace v8proj
         private static void RegisterRepositories(IUnityContainer container)
         {
             container.RegisterType<IUsersRepository, UsersRepository>();
-          
-        }
-
-        private static void RegisterDbContext(IUnityContainer container)
-        {
+            container.RegisterType<IAuthentificationSrevice, AuthenticationService>();
+            container.RegisterType<v8proj.Core.Interface.Support.ISupportRepository, v8proj.DAL.Repositories.SupportRepository>();
             container.RegisterType<ApplicationDbContext>();
         }
     }

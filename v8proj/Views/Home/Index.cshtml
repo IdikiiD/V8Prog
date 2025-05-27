@@ -10,8 +10,8 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach (var car in Model.Cars)
         {
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="@car.CartImage" alt="@car.CartName" class="w-full h-48 object-cover"/>
+            <div class="bg-[#c8c8c8] rounded-lg shadow-lg overflow-hidden">
+                 <img src="@car.CartImage" alt="@car.CartName" class="w-full h-48 object-cover"/>
                 <div class="p-6">
                     <h2 class="text-xl font-bold mb-2">@car.CartName</h2>
                     <p class="text-gray-600 mb-4">@car.CartDescription</p>
@@ -70,11 +70,12 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach (var post in Model.Posts)
         {
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-[#c0c0c0] rounded-lg shadow-lg overflow-hidden">
+                
                 @if (!string.IsNullOrEmpty(post.ImagePath1))
                 {
                     <img src="@Url.Action("Image", "Post", new { file = System.IO.Path.GetFileName(post.ImagePath1) })"
-                         alt="@post.Title" class="w-full h-48 object-cover rounded-t-lg" />
+                         alt="@post.Title" class="w-full h-48 object-cover rounded-t-lg"/>
                 }
                 else
                 {
@@ -91,7 +92,7 @@
                     </div>
                     <p class="text-gray-600 mb-4">@post.Category</p>
 
-                   
+
                 </div>
             </div>
         }
