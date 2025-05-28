@@ -32,41 +32,85 @@
             Категория: @Request["category"]
         </h2>
     }
+    <div class="mb-6">
+        <input id="post-search" type="text" placeholder="Поиск постов..."
+               class="w-full px-4 py-2 border border-gray-300 rounded bg-white bg-opacity-50 backdrop-blur-sm shadow-sm text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-300"
+               autocomplete="off" />
+        <ul id="search-suggestions" class="border border-gray-300 rounded bg-white mt-1 hidden"></ul>
+    </div>
+
 
     @section Scripts {
         <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet"/>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                document.querySelectorAll('.add-to-favorites').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const postId = this.getAttribute('data-post-id');
-                        const btn = this;
 
-                        fetch(`/Post/ToggleFavorite?postId=${postId}`, {
-                            method: 'POST'
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    toastr.success('Пост добавлен в избранное');
-                                    btn.textContent = 'Добавлено';
-                                    btn.disabled = true;
-                                } else {
-                                    toastr.error(data.message || 'Ошибка при добавлении');
-                                }
-                            })
-                            .catch(() => {
-                                toastr.error('Ошибка запроса');
+            document.addEventListener('DOMContentLoaded', function () {
+                const input = document.getElementById('post-search');
+                const suggestions = document.getElementById('search-suggestions');
+
+                input.addEventListener('input', function () {
+                    const query = input.value.trim();
+
+                    if (query.length < 2) {
+                        suggestions.innerHTML = '';
+                        suggestions.classList.add('hidden');
+                        return;
+                    }
+
+                    fetch(`/Post/SearchPosts?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestions.innerHTML = '';
+                            if (data.length > 0) {
+                                data.forEach(post => {
+                                    const li = document.createElement('li');
+                                    li.textContent = post.title;
+                                    li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+                                    li.addEventListener('click', () => {
+                                        window.location.href = `/Post/Details/${post.id}`;
+                                    });
+                                    suggestions.appendChild(li);
+                                });
+                                suggestions.classList.remove('hidden');
+                            } else {
+                                suggestions.classList.add('hidden');
+                            }
+
+                            document.addEventListener('DOMContentLoaded', function () {
+                                document.querySelectorAll('.add-to-favorites').forEach(button => {
+                                    button.addEventListener('click', function () {
+                                        const postId = this.getAttribute('data-post-id');
+                                        const btn = this;
+
+                                        fetch(`/Post/ToggleFavorite?postId=${postId}`, {
+                                            method: 'POST'
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    toastr.success('Пост добавлен в избранное');
+                                                    btn.textContent = 'Добавлено';
+                                                    btn.disabled = true;
+                                                } else {
+                                                    toastr.error(data.message || 'Ошибка при добавлении');
+                                                }
+                                            })
+                                            .catch(() => {
+                                                toastr.error('Ошибка запроса');
+                                            });
+                                    });
+                                });
                             });
-                    });
+                        });
                 });
             });
+
         </script>
     }
 
-    <h2 class="text-2xl font-bold mt-10 mb-4">Концепт-Арты</h2>
+    <h2 class="text-2xl font-bold mt-10 mb-4 text-white">Концепт-Арты</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach (var post in Model.Posts)
         {

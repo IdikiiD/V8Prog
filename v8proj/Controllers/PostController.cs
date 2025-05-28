@@ -26,6 +26,20 @@ namespace v8proj.Controllers
         private readonly IUserService _userService;
         private readonly IReportService _reportService;
 
+        
+        [HttpGet]
+        public JsonResult SearchPosts(string query)
+        {
+            var posts = _postService.SearchPosts(query); // через слой бизнес-логики
+            var result = posts.Select(p => new
+            {
+                id = p.Id,
+                title = p.Title
+            });
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         public PostController(IPostService postService, IUserService userService, IReportService reportService)
         {
             _postService = postService;

@@ -8,6 +8,8 @@ namespace v8proj.BissnessLogic.Interfaces.Posts
 {
     public interface IPostService
     {
+        IEnumerable<Post> SearchPosts(string query);
+
         List<Post> GetPostsFilteredAndSorted(string category); 
         Post GetPostById(int id); 
         void AddPost(Post post); 
