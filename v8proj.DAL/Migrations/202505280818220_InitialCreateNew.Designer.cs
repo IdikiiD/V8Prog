@@ -13,7 +13,7 @@ namespace v8proj.DAL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202505271633010_InitialCreateNew"; }
+            get { return "202505280818220_InitialCreateNew"; }
         }
         
         string IMigrationMetadata.Source

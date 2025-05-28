@@ -1,4 +1,5 @@
 @using v8proj.Core.Entities
+@using v8proj.Core.Model.DTO.Report
 @model Post
 
 @{
@@ -61,11 +62,16 @@
         <a href="@Url.Action("Index", "Home")" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center">
             Back to List
         </a>
-        <!-- Кнопка "Поддержать автора" -->
         <button type="button"
                 class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded ml-4"
                 data-bs-toggle="modal" data-bs-target="#supportModal">
             Support the Author
+        </button>
+
+        <button type="button"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ml-4"
+                data-bs-toggle="modal" data-bs-target="#reportModal">
+            Report Post
         </button>
 
         @{
@@ -82,7 +88,6 @@
     </div>
 </div>
 
-<!-- Модальное окно Поддержки -->
 <div class="modal fade" id="supportModal" tabindex="-1" role="dialog" aria-labelledby="supportModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -92,7 +97,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form method="post" action="/Support/Support"> <!-- Путь /Support/Support, что соответствует методу -->
+            <form method="post" action="/Support/Support">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="amount">Amount (₽):</label>
@@ -131,13 +136,36 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </form>
-
-
-
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report to post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Html.BeginForm("ReportPost", "Post", FormMethod.Post, new { id = "reportForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id, new { name = "PostId" })
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reason">Причина жалобы:</label>
+                        <textarea class="form-control" id="reason" name="Reason" rows="5" required minlength="10" maxlength="500"></textarea>
+                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Send report</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -174,6 +202,17 @@
                 });
             }
 
+            const reportForm = document.getElementById("reportForm");
+            if (reportForm) {
+                reportForm.addEventListener("submit", function(e) {
+                    const reasonInput = document.getElementById("reason");
+                    if (reasonInput.value.length < 10 || reasonInput.value.length > 500) {
+                        alert("Причина жалобы должна быть от 10 до 500 символов.");
+                        e.preventDefault();
+                    }
+                });
+            }
+
             const images = document.querySelectorAll('.click-to-enlarge');
             images.forEach(img => {
                 img.addEventListener('click', function () {
@@ -202,11 +241,11 @@
 
                     overlay.addEventListener('click', function () {
                         overlay.style.display = 'none';
-                        overlay.remove(); // Очищаем overlay при закрытии
+                        overlay.remove();
                     });
-                    document.body.appendChild(overlay); // Добавляем overlay в DOM
+                    document.body.appendChild(overlay);
                 });
             });
         });
     </script>
-}}
+}

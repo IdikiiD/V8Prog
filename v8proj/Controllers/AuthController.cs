@@ -140,7 +140,6 @@ namespace v8proj.Controllers
                 Response.Cookies.Set(userEmailCookie); 
             }
 
-            // Удаляем UserRole cookie
             if (Request.Cookies["UserRole"] != null)
             {
                 var userRoleCookie = new HttpCookie("UserRole")

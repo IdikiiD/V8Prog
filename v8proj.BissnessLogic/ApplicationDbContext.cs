@@ -19,24 +19,21 @@ namespace v8proj.DAL
 
         public DbSet<eUseControl> eUseControl { get; set; }
 
-
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Report> Reports { get; set; } // Добавлено
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserEf>()
-            .HasMany(u => u.FavoritePosts)
+                .HasMany(u => u.FavoritePosts)
                 .WithMany(p => p.FavoritedBy)
                 .Map(m =>
-            {
-                m.ToTable("UserFavorites");
-                m.MapLeftKey("UserId");
-                m.MapRightKey("PostId");
-            });
-
-
-
+                {
+                    m.ToTable("UserFavorites");
+                    m.MapLeftKey("UserId");
+                    m.MapRightKey("PostId");
+                });
         }
     }
 }

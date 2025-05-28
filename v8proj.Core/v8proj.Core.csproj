@@ -61,6 +61,7 @@
     <ItemGroup>
         <Compile Include="Constant\TempDataKeys.cs" />
         <Compile Include="Entities\Post.cs" />
+        <Compile Include="Entities\Report.cs" />
         <Compile Include="Entities\Support.cs" />
         <Compile Include="Entities\User\UserEF.cs" />
         <Compile Include="Enums\Entinity\EntityStatus.cs" />
@@ -70,9 +71,12 @@
         <Compile Include="Enums\User\SignUpStatus.cs" />
         <Compile Include="Enums\User\UserType.cs" />
         <Compile Include="Interface\GenericRep\IGenericRepository.cs" />
+        <Compile Include="Interface\Report\IreportRepository.cs" />
         <Compile Include="Interface\Support\ISupportRepository.cs" />
         <Compile Include="Interface\User\IUserRepository.cs" />
         <Compile Include="Model\DTO\GenericResponse\BaseResponse.cs" />
+        <Compile Include="Model\DTO\Report\CreateReport.cs" />
+        <Compile Include="Model\DTO\Report\ReportViewDto.cs" />
         <Compile Include="Model\DTO\User\SignInDto.cs" />
         <Compile Include="Model\DTO\User\SignUpDto.cs" />
         <Compile Include="Model\DTO\User\UserDto.cs" />

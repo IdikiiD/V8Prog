@@ -15,7 +15,11 @@ using AuthenticationService = v8proj.BissnessLogic.Services.AuthentificationServ
 using v8proj.BissnessLogic.Interfaces.Home;
 using v8proj.BissnessLogic.Services.Home;
 using v8proj.BissnessLogic.Interfaces.Posts;
+using v8proj.BissnessLogic.Interfaces.Reports;
 using v8proj.BissnessLogic.Services.Posts;
+using v8proj.BissnessLogic.Services.Reports;
+using v8proj.Core.Interface.Report;
+using v8proj.DAL.Repositories.Report;
 
 namespace v8proj
 {
@@ -50,6 +54,8 @@ namespace v8proj
             container.RegisterType<IEUseControlService, EUseControlService>();
             container.RegisterType<IPostService, PostService>(); 
             container.RegisterType<IHomeService, HomeService>();
+            container.RegisterType<IReportRepository, ReportRepository>();
+            container.RegisterType<IReportService, ReportService>();
             container.RegisterType<IAuthentificationSrevice, AuthenticationService>(); 
         }
 

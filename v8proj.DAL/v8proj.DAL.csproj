@@ -61,12 +61,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202505271633010_InitialCreateNew.cs" />
-    <Compile Include="Migrations\202505271633010_InitialCreateNew.Designer.cs">
-      <DependentUpon>202505271633010_InitialCreateNew.cs</DependentUpon>
+    <Compile Include="Migrations\202505280818220_InitialCreateNew.cs" />
+    <Compile Include="Migrations\202505280818220_InitialCreateNew.Designer.cs">
+      <DependentUpon>202505280818220_InitialCreateNew.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Generic\GenericRepository.cs" />
+    <Compile Include="Repositories\Report\ReportRepository.cs" />
     <Compile Include="Repositories\SupportRepository.cs" />
     <Compile Include="Repositories\User\UserRepository.cs" />
   </ItemGroup>
@@ -85,8 +87,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202505271633010_InitialCreateNew.resx">
-      <DependentUpon>202505271633010_InitialCreateNew.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202505280818220_InitialCreateNew.resx">
+      <DependentUpon>202505280818220_InitialCreateNew.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

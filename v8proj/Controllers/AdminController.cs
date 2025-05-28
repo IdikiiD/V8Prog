@@ -10,16 +10,20 @@ using Microsoft.AspNet.Identity;
 using v8proj.Core.Enums;
 using v8proj.BissnessLogic.Interfaces.Home;
 using v8proj.BissnessLogic.Services.Home;
+using v8proj.BissnessLogic.Interfaces.Reports;
+using v8proj.Core.Model.DTO.Report;
 
 namespace v8proj.Controllers
 {
     public class AdminController : HomeController
     {
         private readonly IUserService _userService;
+        private readonly IReportService _reportService;
 
-        public AdminController(IUserService userService, IHomeService homeService) : base(homeService)
+        public AdminController(IUserService userService, IHomeService homeService, IReportService reportService) : base(homeService)
         {
             _userService = userService;
+            _reportService = reportService;
         }
 
         private bool IsCurrentUserAdmin()
@@ -151,9 +155,61 @@ namespace v8proj.Controllers
             return RedirectToAction("Users");
         }
 
-        public ActionResult Concepts()
+        public async Task<ActionResult> Concepts()
         {
-            return View();
+            if (!IsCurrentUserAdmin())
+            {
+                return new HttpStatusCodeResult(403, "Forbidden");
+            }
+
+            var unresolvedReports = await _reportService.GetUnresolvedReports();
+            return View(unresolvedReports);
+        }
+
+        [HttpPost]
+        // [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResolveReport(int reportId, string resolutionDetails)
+        {
+            if (!IsCurrentUserAdmin())
+            {
+                return new HttpStatusCodeResult(403, "Forbidden");
+            }
+
+            if (string.IsNullOrEmpty(resolutionDetails))
+            {
+                TempData["ErrorMessage"] = "Пожалуйста, введите детали решения.";
+                return RedirectToAction("Concepts");
+            }
+
+            var response = await _reportService.ResolveReport(reportId, resolutionDetails);
+
+            if (response.Status == OperationStatus.Success)
+            {
+                TempData["SuccessMessage"] = response.Message;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = response.Message;
+            }
+
+            return RedirectToAction("Concepts");
+        }
+
+        public async Task<ActionResult> ReportDetails(int id)
+        {
+            if (!IsCurrentUserAdmin())
+            {
+                return new HttpStatusCodeResult(403, "Forbidden");
+            }
+
+            var report = await _reportService.GetReportById(id);
+            if (report == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(report);
         }
 
         public ActionResult Settings()

@@ -124,6 +124,7 @@
         <Compile Include="Interfaces\Home\IEUseControlService.cs" />
         <Compile Include="Interfaces\JWT\IJwtService.cs" />
         <Compile Include="Interfaces\Posts\IPostService.cs" />
+        <Compile Include="Interfaces\Report\IReportService.cs" />
         <Compile Include="Interfaces\User\IAuthentificationSrevice.cs" />
         <Compile Include="Interfaces\User\IUserSrvice.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
@@ -133,6 +134,7 @@
         <Compile Include="Services\Home\IHomeService.cs" />
         <Compile Include="Services\JWTService\JWTService.cs" />
         <Compile Include="Services\Posts\PostService.cs" />
+        <Compile Include="Services\Report\ReportService.cs" />
         <Compile Include="Services\User\UserService.cs" />
     </ItemGroup>
     <ItemGroup>

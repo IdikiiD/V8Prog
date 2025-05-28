@@ -5,33 +5,39 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using v8proj.Core.Entities;
-using v8proj.Core.Model; 
+using v8proj.Core.Model;
 using v8proj.Web.Model.ViewModels;
 using v8proj.BissnessLogic.Interfaces.Posts;
-using v8proj.BissnessLogic.Interfaces.User; 
+using v8proj.BissnessLogic.Interfaces.User;
+using v8proj.BissnessLogic.Interfaces.Reports;
+using v8proj.Core.Model.DTO.Report;
+using v8proj.Core.Enums;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using v8proj.Web.Model.DTO; // Добавлено для BaseResponse<T>
 
 namespace v8proj.Controllers
 {
     public class PostController : Controller
     {
 
-        private readonly IPostService _postService; 
-        private readonly IUserService _userService; 
-        
-        public PostController(IPostService postService, IUserService userService)
+        private readonly IPostService _postService;
+        private readonly IUserService _userService;
+        private readonly IReportService _reportService;
+
+        public PostController(IPostService postService, IUserService userService, IReportService reportService)
         {
             _postService = postService;
             _userService = userService;
+            _reportService = reportService;
         }
 
-        // GET: Post/Create
         public ActionResult Create()
         {
             ViewBag.Categories = new List<string> { "Sedan", "SUV", "Pickup", "Convertible" };
             return View();
         }
 
-        // GET: Post/Details/5
         public ActionResult Details(int id)
         {
             var post = _postService.GetPostById(id);
@@ -67,7 +73,6 @@ namespace v8proj.Controllers
             return View(post);
         }
 
-        // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(PostCreateViewModel model)
@@ -98,8 +103,8 @@ namespace v8proj.Controllers
                     return View(model);
                 }
 
-                _postService.AddPost(post);      
-                _postService.SaveChanges();      
+                _postService.AddPost(post);
+                _postService.SaveChanges();
 
                 return RedirectToAction("Index", "Home");
             }
@@ -189,7 +194,6 @@ namespace v8proj.Controllers
             return View(favorites);
         }
 
-        // Метод для добавления/удаления поста из избранного
         [HttpPost]
         public ActionResult ToggleFavorite(int id)
         {
@@ -220,6 +224,49 @@ namespace v8proj.Controllers
             _postService.SaveChanges(); 
 
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        // [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReportPost(CreateReportDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Пожалуйста, укажите причину жалобы.";
+                return RedirectToAction("Details", new { id = model.PostId });
+            }
+
+            int reporterUserId = GetCurrentUserId();
+            if (reporterUserId == -1)
+            {
+                TempData["ErrorMessage"] = "Не удалось определить пользователя. Пожалуйста, войдите в систему.";
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            var response = await _reportService.CreateReport(model, reporterUserId);
+
+            if (response.Status == OperationStatus.Success)
+            {
+                TempData["SuccessMessage"] = response.Message;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = response.Message;
+            }
+
+            return RedirectToAction("Details", new { id = model.PostId });
+        }
+
+        private int GetCurrentUserId()
+        {
+            ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
+            Claim idClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+            if (idClaim != null && int.TryParse(idClaim.Value, out int userId))
+            {
+                return userId;
+            }
+            return -1;
         }
     }
 }

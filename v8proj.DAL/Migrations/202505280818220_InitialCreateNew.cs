@@ -54,6 +54,25 @@
                 .PrimaryKey(t => t.UserId);
             
             CreateTable(
+                "dbo.Reports",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ReportedPostId = c.Int(nullable: false),
+                        ReporterUserId = c.Int(nullable: false),
+                        Reason = c.String(nullable: false, maxLength: 500),
+                        ReportDate = c.DateTime(nullable: false),
+                        IsResolved = c.Boolean(nullable: false),
+                        ResolutionDate = c.DateTime(),
+                        ResolutionDetails = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Posts", t => t.ReportedPostId, cascadeDelete: true)
+                .ForeignKey("dbo.UserEfs", t => t.ReporterUserId, cascadeDelete: true)
+                .Index(t => t.ReportedPostId)
+                .Index(t => t.ReporterUserId);
+            
+            CreateTable(
                 "dbo.Supports",
                 c => new
                     {
@@ -93,14 +112,19 @@
         {
             DropForeignKey("dbo.Supports", "UserId", "dbo.UserEfs");
             DropForeignKey("dbo.Supports", "PostId", "dbo.Posts");
+            DropForeignKey("dbo.Reports", "ReporterUserId", "dbo.UserEfs");
+            DropForeignKey("dbo.Reports", "ReportedPostId", "dbo.Posts");
             DropForeignKey("dbo.UserFavorites", "PostId", "dbo.Posts");
             DropForeignKey("dbo.UserFavorites", "UserId", "dbo.UserEfs");
             DropIndex("dbo.UserFavorites", new[] { "PostId" });
             DropIndex("dbo.UserFavorites", new[] { "UserId" });
             DropIndex("dbo.Supports", new[] { "PostId" });
             DropIndex("dbo.Supports", new[] { "UserId" });
+            DropIndex("dbo.Reports", new[] { "ReporterUserId" });
+            DropIndex("dbo.Reports", new[] { "ReportedPostId" });
             DropTable("dbo.UserFavorites");
             DropTable("dbo.Supports");
+            DropTable("dbo.Reports");
             DropTable("dbo.UserEfs");
             DropTable("dbo.Posts");
             DropTable("dbo.eUseControls");

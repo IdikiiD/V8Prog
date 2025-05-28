@@ -332,6 +332,7 @@
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SupportController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Filters\AuthAttribute.cs" />
     <Compile Include="Global.asax.cs" />
     <Compile Include="Model\PostCreateViewModel.cs" />
     <Compile Include="Model\ProfileViewModel.cs" />

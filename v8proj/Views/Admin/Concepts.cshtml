@@ -1,27 +1,96 @@
+@using v8proj.Core.Model.DTO.Report
+@model IEnumerable<ReportViewDto>
+
 @{
-    ViewBag.Title = "Concept Art";
+    ViewBag.Title = "Concepts - Reports Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Concept Art</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-<div class="container mx-auto p-8">
-    <h1 class="text-3xl font-bold mb-6">Concept Art</h1>
+<h2 class="text-3xl font-bold mb-6">Manage reports</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <img src="https://via.placeholder.com/150" alt="Concept" class="mb-4">
-            <h2 class="text-lg font-bold">Concept Title</h2>
-            <p>Author: Ivan Ivanov</p>
-            <button class="bg-red-500 text-white px-4 py-2 rounded mt-2">Delete</button>
-        </div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
     </div>
-</div>
-</body>
-</html>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        There are no active complaints.
+    </div>
+}
+else
+{
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+        <tr class="bg-gray-200">
+            <th class="px-4 py-2 text-left">ID</th>
+            <th class="px-4 py-2 text-left">Post</th>
+            <th class="px-4 py-2 text-left">User</th>
+            <th class="px-4 py-2 text-left">Reason</th>
+            <th class="px-4 py-2 text-left">Date</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var report in Model)
+        {
+            <tr class="hover:bg-gray-100">
+                <td class="border px-4 py-2">@report.Id</td>
+                <td class="border px-4 py-2">
+                    <a href="@Url.Action("Details", "Post", new { id = report.ReportedPostId })" class="text-blue-600 hover:underline">
+                        @report.ReportedPostTitle (#@report.ReportedPostId)
+                    </a>
+                </td>
+                <td class="border px-4 py-2">@report.ReporterUserName (#@report.ReporterUserId)</td>
+                <td class="border px-4 py-2">@report.Reason</td>
+                <td class="border px-4 py-2">@report.ReportDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td class="border px-4 py-2">
+                    <button type="button"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded text-sm"
+                            data-bs-toggle="modal" data-bs-target="#resolveReportModal_@report.Id">
+                        Решить
+                    </button>
+                </td>
+            </tr>
+
+            <div class="modal fade" id="resolveReportModal_@report.Id" tabindex="-1" role="dialog" aria-labelledby="resolveReportModalLabel_@report.Id" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="resolveReportModalLabel_@report.Id">Рассмотреть жалобу №@report.Id</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        @using (Html.BeginForm("ResolveReport", "Admin", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("reportId", report.Id)
+                            <div class="modal-body">
+                                <p><strong>Post:</strong> <a href="@Url.Action("Details", "Post", new { id = report.ReportedPostId })" target="_blank">@report.ReportedPostTitle</a></p>
+                                <p><strong>Post:</strong> @report.ReporterUserName</p>
+                                <p><strong>Reason:</strong> @report.Reason</p>
+                                <div class="form-group mt-3">
+                                    <label for="resolutionDetails_@report.Id">Solution details:</label>
+                                    <textarea class="form-control" id="resolutionDetails_@report.Id" name="resolutionDetails" rows="3" required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Confirm the decision</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        </tbody>
+    </table>
+}
