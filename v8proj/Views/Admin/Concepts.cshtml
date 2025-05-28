@@ -2,11 +2,11 @@
 @model IEnumerable<ReportViewDto>
 
 @{
-    ViewBag.Title = "Concepts - Reports Management";
+    ViewBag.Title = "Reports Management";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="text-3xl font-bold mb-6">Manage reports</h2>
+<h2 class="text-3xl font-bold mb-6">Manage Reports</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -24,7 +24,7 @@
 @if (!Model.Any())
 {
     <div class="alert alert-info" role="alert">
-        There are no active complaints.
+        There are no active reports.
     </div>
 }
 else
@@ -57,7 +57,7 @@ else
                     <button type="button"
                             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded text-sm"
                             data-bs-toggle="modal" data-bs-target="#resolveReportModal_@report.Id">
-                        Решить
+                        Resolve
                     </button>
                 </td>
             </tr>
@@ -66,7 +66,7 @@ else
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="resolveReportModalLabel_@report.Id">Рассмотреть жалобу №@report.Id</h5>
+                            <h5 class="modal-title" id="resolveReportModalLabel_@report.Id">Review Report #@report.Id</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         @using (Html.BeginForm("ResolveReport", "Admin", FormMethod.Post))
@@ -75,15 +75,15 @@ else
                             @Html.Hidden("reportId", report.Id)
                             <div class="modal-body">
                                 <p><strong>Post:</strong> <a href="@Url.Action("Details", "Post", new { id = report.ReportedPostId })" target="_blank">@report.ReportedPostTitle</a></p>
-                                <p><strong>Post:</strong> @report.ReporterUserName</p>
+                                <p><strong>User:</strong> @report.ReporterUserName</p>
                                 <p><strong>Reason:</strong> @report.Reason</p>
                                 <div class="form-group mt-3">
-                                    <label for="resolutionDetails_@report.Id">Solution details:</label>
+                                    <label for="resolutionDetails_@report.Id">Resolution Details:</label>
                                     <textarea class="form-control" id="resolutionDetails_@report.Id" name="resolutionDetails" rows="3" required></textarea>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Confirm the decision</button>
+                                <button type="submit" class="btn btn-success">Confirm Resolution</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             </div>
                         }

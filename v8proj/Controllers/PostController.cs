@@ -14,7 +14,8 @@ using v8proj.Core.Model.DTO.Report;
 using v8proj.Core.Enums;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using v8proj.Web.Model.DTO; // Добавлено для BaseResponse<T>
+using v8proj.Web.Model.DTO; 
+using v8proj.Web.Filters;
 
 namespace v8proj.Controllers
 {
@@ -181,6 +182,7 @@ namespace v8proj.Controllers
         
         public ActionResult Favorites()
         {
+            
             var userEmail = Request.Cookies["UserEmail"]?.Value;
             if (string.IsNullOrEmpty(userEmail))
                 return RedirectToAction("SignIn", "Auth");
@@ -227,7 +229,7 @@ namespace v8proj.Controllers
         }
 
         [HttpPost]
-        // [Authorize]
+        [Auth]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ReportPost(CreateReportDto model)
         {
@@ -237,13 +239,24 @@ namespace v8proj.Controllers
                 return RedirectToAction("Details", new { id = model.PostId });
             }
 
-            int reporterUserId = GetCurrentUserId();
-            if (reporterUserId == -1)
+            HttpCookie userEmailCookie = Request.Cookies["UserEmail"];
+            if (userEmailCookie == null || string.IsNullOrEmpty(userEmailCookie.Value))
             {
                 TempData["ErrorMessage"] = "Не удалось определить пользователя. Пожалуйста, войдите в систему.";
                 return RedirectToAction("SignIn", "Auth");
             }
 
+            string userEmail = userEmailCookie.Value;
+            var userResponse = await _userService.GetUserByEmailAsync(userEmail);
+
+            if (userResponse.Data == null)
+            {
+                TempData["ErrorMessage"] = "Пользователь не найден. Пожалуйста, войдите в систему.";
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            int reporterUserId = userResponse.Data.Id; 
+            
             var response = await _reportService.CreateReport(model, reporterUserId);
 
             if (response.Status == OperationStatus.Success)
@@ -256,17 +269,6 @@ namespace v8proj.Controllers
             }
 
             return RedirectToAction("Details", new { id = model.PostId });
-        }
-
-        private int GetCurrentUserId()
-        {
-            ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
-            Claim idClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-            if (idClaim != null && int.TryParse(idClaim.Value, out int userId))
-            {
-                return userId;
-            }
-            return -1;
         }
     }
 }

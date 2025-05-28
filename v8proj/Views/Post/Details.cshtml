@@ -150,7 +150,8 @@
             @using (Html.BeginForm("ReportPost", "Post", FormMethod.Post, new { id = "reportForm" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.Id, new { name = "PostId" })
+                @Html.HiddenFor(m => m.Id) 
+                <input type="hidden" name="PostId" value="@Model.Id" /> // Добавьте это, чтобы явно создать поле с именем PostId
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="reason">Причина жалобы:</label>

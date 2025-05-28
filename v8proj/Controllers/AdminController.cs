@@ -1,20 +1,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web; 
 using v8proj.BissnessLogic.Interfaces.User;
 using v8proj.Core.Enums.User;
 using v8proj.Core.Model.DTO.User;
 using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNet.Identity;
 using v8proj.Core.Enums;
 using v8proj.BissnessLogic.Interfaces.Home;
-using v8proj.BissnessLogic.Services.Home;
 using v8proj.BissnessLogic.Interfaces.Reports;
+using v8proj.BissnessLogic.Services.Home;
 using v8proj.Core.Model.DTO.Report;
+using v8proj.Web.Filters;
 
 namespace v8proj.Controllers
 {
+    [Auth(Roles = "Admin")] 
     public class AdminController : HomeController
     {
         private readonly IUserService _userService;
@@ -26,18 +27,19 @@ namespace v8proj.Controllers
             _reportService = reportService;
         }
 
-        private bool IsCurrentUserAdmin()
+        private async Task<int> GetCurrentUserIdAsync()
         {
-            ClaimsIdentity identity = (ClaimsIdentity)User.Identity;
-            return identity.HasClaim(ClaimTypes.Role, "Admin");
-        }
-
-        private int GetCurrentUserId()
-        {
-            Claim idClaim = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.NameIdentifier);
-            if (idClaim != null && int.TryParse(idClaim.Value, out int userId))
+            HttpCookie userEmailCookie = Request.Cookies["UserEmail"];
+            if (userEmailCookie == null || string.IsNullOrEmpty(userEmailCookie.Value))
             {
-                return userId;
+                return -1;
+            }
+
+            string userEmail = userEmailCookie.Value;
+            var userResponse = await _userService.GetUserByEmailAsync(userEmail);
+            if (userResponse.Data != null)
+            {
+                return userResponse.Data.Id;
             }
             return -1;
         }
@@ -70,6 +72,13 @@ namespace v8proj.Controllers
         public async Task<ActionResult> BanUser(int userId)
         {
             var userToBan = await _userService.GetUserByIdAsync(userId);
+            int currentAdminId = await GetCurrentUserIdAsync();
+            if (userToBan.Data != null && userToBan.Data.Id == currentAdminId)
+            {
+                TempData["Error"] = "Вы не можете забанить самого себя.";
+                return RedirectToAction("Users");
+            }
+
             if (userToBan.Data != null && userToBan.Data.UserType == UserType.Admin)
             {
                 TempData["Error"] = "Администраторы не могут банить других администраторов.";
@@ -79,7 +88,7 @@ namespace v8proj.Controllers
             var response = await _userService.BanUserAsync(userId);
             if (response.Status == OperationStatus.Success)
             {
-                TempData["Success"] = "Пользователь успешно забанен!.";
+                TempData["Success"] = "Пользователь успешно забанен!"; 
             }
             else
             {
@@ -95,7 +104,7 @@ namespace v8proj.Controllers
             var response = await _userService.UnbanUserAsync(userId);
             if (response.Status == OperationStatus.Success)
             {
-                TempData["Success"] = "Пользователь успешно разбанен!.";
+                TempData["Success"] = "Пользователь успешно разбанен!"; 
             }
             else
             {
@@ -109,9 +118,16 @@ namespace v8proj.Controllers
         public async Task<ActionResult> MakeAdmin(int userId)
         {
             var userToMakeAdmin = await _userService.GetUserByIdAsync(userId);
+            int currentAdminId = await GetCurrentUserIdAsync();
+            if (userToMakeAdmin.Data != null && userToMakeAdmin.Data.Id == currentAdminId)
+            {
+                TempData["Error"] = "Вы уже администратор.";
+                return RedirectToAction("Users");
+            }
+
             if (userToMakeAdmin.Data != null && userToMakeAdmin.Data.UserType == UserType.Admin)
             {
-                TempData["Error"] = "Нельзя сделать админа, другим админом";
+                TempData["Error"] = "Нельзя сделать админа, другим админом"; 
                 return RedirectToAction("Users");
             }
 
@@ -131,15 +147,17 @@ namespace v8proj.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RevokeAdmin(int userId)
         {
-            if (GetCurrentUserId() == userId)
+            int currentAdminId = await GetCurrentUserIdAsync();
+            if (currentAdminId == userId)
             {
                 TempData["Error"] = "Вы не можете лишить себя прав администратора.";
                 return RedirectToAction("Users");
             }
+
             var userToRevoke = await _userService.GetUserByIdAsync(userId);
             if (userToRevoke.Data != null && userToRevoke.Data.UserType != UserType.Admin)
             {
-                TempData["Error"] = "Можно забрать права только у админа";
+                TempData["Error"] = "Можно забрать права только у админа"; 
                 return RedirectToAction("Users");
             }
 
@@ -157,25 +175,14 @@ namespace v8proj.Controllers
 
         public async Task<ActionResult> Concepts()
         {
-            if (!IsCurrentUserAdmin())
-            {
-                return new HttpStatusCodeResult(403, "Forbidden");
-            }
-
             var unresolvedReports = await _reportService.GetUnresolvedReports();
             return View(unresolvedReports);
         }
 
         [HttpPost]
-        // [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResolveReport(int reportId, string resolutionDetails)
         {
-            if (!IsCurrentUserAdmin())
-            {
-                return new HttpStatusCodeResult(403, "Forbidden");
-            }
-
             if (string.IsNullOrEmpty(resolutionDetails))
             {
                 TempData["ErrorMessage"] = "Пожалуйста, введите детали решения.";
@@ -198,11 +205,6 @@ namespace v8proj.Controllers
 
         public async Task<ActionResult> ReportDetails(int id)
         {
-            if (!IsCurrentUserAdmin())
-            {
-                return new HttpStatusCodeResult(403, "Forbidden");
-            }
-
             var report = await _reportService.GetReportById(id);
             if (report == null)
             {

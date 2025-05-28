@@ -12,7 +12,7 @@ using v8proj.Web.Model.DTO;
 
 namespace v8proj.Controllers
 {
-    public class AuthController : BaseControler
+    public class AuthController : BaseController
     {
         private readonly IAuthentificationSrevice _authService;
         private readonly IUserService _userService;
@@ -38,10 +38,29 @@ namespace v8proj.Controllers
             await ProcessAuthentication(async () => await _authService.SignUp(signUpDto), signUpDto);
 
         [HttpGet]
-        public async Task<ActionResult> SignOut() 
+        public ActionResult SignOut() 
         {
-            ClearAuthCookies(); 
-            return RedirectToAction("SignIn", "Auth");
+            if (Request.Cookies["UserEmail"] != null)
+            {
+                var userEmailCookie = new HttpCookie("UserEmail")
+                {
+                    Expires = DateTime.Now.AddDays(-1), 
+                    HttpOnly = true
+                };
+                Response.Cookies.Set(userEmailCookie); 
+            }
+
+            if (Request.Cookies["UserRole"] != null)
+            {
+                var userRoleCookie = new HttpCookie("UserRole")
+                {
+                    Expires = DateTime.Now.AddDays(-1), 
+                    HttpOnly = true
+                };
+                Response.Cookies.Set(userRoleCookie);
+            }
+
+            return RedirectToAction("SignIn", "Auth"); 
         }
 
         private async Task<ActionResult> ProcessAuthentication
@@ -92,15 +111,24 @@ namespace v8proj.Controllers
                 Response.Cookies.Add(userEmailCookie);
 
                
+                HttpCookie userRoleCookie;
                 if (user.UserType == UserType.Admin)
                 {
-                    HttpCookie userRoleCookie = new HttpCookie("UserRole", "Admin")
+                    userRoleCookie = new HttpCookie("UserRole", "Admin") 
                     {
                         Expires = DateTime.Now.AddDays(7),
                         HttpOnly = true
                     };
-                    Response.Cookies.Add(userRoleCookie);
                 }
+                else
+                {
+                    userRoleCookie = new HttpCookie("UserRole", "User")
+                    {
+                        Expires = DateTime.Now.AddDays(7),
+                        HttpOnly = true
+                    };
+                }
+                Response.Cookies.Add(userRoleCookie);
 
                 return RedirectToAction("Index", "Home"); 
             }
