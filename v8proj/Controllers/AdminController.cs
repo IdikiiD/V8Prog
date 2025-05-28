@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web; 
+using System.Web;
 using v8proj.BissnessLogic.Interfaces.User;
 using v8proj.Core.Enums.User;
 using v8proj.Core.Model.DTO.User;
@@ -9,22 +10,27 @@ using System.Linq;
 using v8proj.Core.Enums;
 using v8proj.BissnessLogic.Interfaces.Home;
 using v8proj.BissnessLogic.Interfaces.Reports;
+using v8proj.BissnessLogic.Interfaces.Posts;
 using v8proj.BissnessLogic.Services.Home;
 using v8proj.Core.Model.DTO.Report;
 using v8proj.Web.Filters;
 
+
 namespace v8proj.Controllers
 {
-    [Auth(Roles = "Admin")] 
+    [Auth(Roles = "Admin")]
     public class AdminController : HomeController
     {
         private readonly IUserService _userService;
         private readonly IReportService _reportService;
+        private readonly IPostService _postService;
 
-        public AdminController(IUserService userService, IHomeService homeService, IReportService reportService) : base(homeService)
+        public AdminController(IUserService userService, IHomeService homeService, IReportService reportService,
+            IPostService postService) : base(homeService)
         {
             _userService = userService;
             _reportService = reportService;
+            _postService = postService;
         }
 
         private async Task<int> GetCurrentUserIdAsync()
@@ -62,7 +68,7 @@ namespace v8proj.Controllers
             }
             else
             {
-                ViewBag.ErrorMessage = response.Message ?? "Failed to upload users.";
+                ViewBag.ErrorMessage = response.Message ?? "Failed to load users.";
             }
             return View(users);
         }
@@ -71,28 +77,21 @@ namespace v8proj.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> BanUser(int userId)
         {
-            var userToBan = await _userService.GetUserByIdAsync(userId);
             int currentAdminId = await GetCurrentUserIdAsync();
-            if (userToBan.Data != null && userToBan.Data.Id == currentAdminId)
+            if (userId == currentAdminId)
             {
-                TempData["Error"] = "Вы не можете забанить самого себя.";
-                return RedirectToAction("Users");
-            }
-
-            if (userToBan.Data != null && userToBan.Data.UserType == UserType.Admin)
-            {
-                TempData["Error"] = "Администраторы не могут банить других администраторов.";
+                TempData["Error"] = "You cannot ban yourself.";
                 return RedirectToAction("Users");
             }
 
             var response = await _userService.BanUserAsync(userId);
             if (response.Status == OperationStatus.Success)
             {
-                TempData["Success"] = "Пользователь успешно забанен!"; 
+                TempData["Success"] = "User successfully banned!";
             }
             else
             {
-                TempData["Error"] = response.Message ?? "Не удалось забанить пользователя.";
+                TempData["Error"] = response.Message ?? "Failed to ban user.";
             }
             return RedirectToAction("Users");
         }
@@ -104,11 +103,11 @@ namespace v8proj.Controllers
             var response = await _userService.UnbanUserAsync(userId);
             if (response.Status == OperationStatus.Success)
             {
-                TempData["Success"] = "Пользователь успешно разбанен!"; 
+                TempData["Success"] = "User successfully unbanned!";
             }
             else
             {
-                TempData["Error"] = response.Message ?? "Не удалось разбанить пользователя.";
+                TempData["Error"] = response.Message ?? "Failed to unban user.";
             }
             return RedirectToAction("Users");
         }
@@ -117,17 +116,10 @@ namespace v8proj.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> MakeAdmin(int userId)
         {
-            var userToMakeAdmin = await _userService.GetUserByIdAsync(userId);
             int currentAdminId = await GetCurrentUserIdAsync();
-            if (userToMakeAdmin.Data != null && userToMakeAdmin.Data.Id == currentAdminId)
+            if (userId == currentAdminId)
             {
-                TempData["Error"] = "Вы уже администратор.";
-                return RedirectToAction("Users");
-            }
-
-            if (userToMakeAdmin.Data != null && userToMakeAdmin.Data.UserType == UserType.Admin)
-            {
-                TempData["Error"] = "Нельзя сделать админа, другим админом"; 
+                TempData["Error"] = "You are already an administrator.";
                 return RedirectToAction("Users");
             }
 
@@ -150,14 +142,7 @@ namespace v8proj.Controllers
             int currentAdminId = await GetCurrentUserIdAsync();
             if (currentAdminId == userId)
             {
-                TempData["Error"] = "Вы не можете лишить себя прав администратора.";
-                return RedirectToAction("Users");
-            }
-
-            var userToRevoke = await _userService.GetUserByIdAsync(userId);
-            if (userToRevoke.Data != null && userToRevoke.Data.UserType != UserType.Admin)
-            {
-                TempData["Error"] = "Можно забрать права только у админа"; 
+                TempData["Error"] = "You cannot revoke your own administrator rights.";
                 return RedirectToAction("Users");
             }
 
@@ -185,7 +170,7 @@ namespace v8proj.Controllers
         {
             if (string.IsNullOrEmpty(resolutionDetails))
             {
-                TempData["ErrorMessage"] = "Пожалуйста, введите детали решения.";
+                TempData["ErrorMessage"] = "Please enter resolution details.";
                 return RedirectToAction("Concepts");
             }
 
@@ -225,6 +210,33 @@ namespace v8proj.Controllers
         {
             ViewBag.Message = "Settings saved successfully!";
             return View("Settings");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeletePost(int id)
+        {
+            System.Diagnostics.Debug.WriteLine($"AdminController.DeletePost: Request to delete PostId: {id}");
+
+            try
+            {
+                var response = await _postService.DeletePost(id);
+
+                System.Diagnostics.Debug.WriteLine($"AdminController.DeletePost: PostService Response - Success: {response.Status == OperationStatus.Success}, Message: {response.Message}");
+
+                if (response.Status == OperationStatus.Success)
+                {
+                    return Json(new { success = true, message = response.Message });
+                }
+                else
+                {
+                    return Json(new { success = false, message = response.Message });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An unhandled error occurred on the server while deleting the post." });
+            }
         }
     }
 }

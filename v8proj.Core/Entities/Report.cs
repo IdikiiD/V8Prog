@@ -28,5 +28,7 @@ namespace v8proj.Core.Entities
         public bool IsResolved { get; set; } = false;
         public DateTime? ResolutionDate { get; set; }
         public string ResolutionDetails { get; set; }
+        
+        
     }
 }

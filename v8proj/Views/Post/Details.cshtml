@@ -1,26 +1,14 @@
 @using v8proj.Core.Entities
-@using v8proj.Core.Model.DTO.Report
 @model Post
 
 @{
-    var userEmailCookie = Request.Cookies["UserEmail"];
-    int? currentUserId = null;
+    ViewBag.Title = "Post Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
-    if (userEmailCookie != null)
-    {
-        var userEmail = userEmailCookie.Value;
-        var db = new v8proj.DAL.ApplicationDbContext();
-        var currentUser = db.Users.FirstOrDefault(u => u.Email == userEmail);
-        if (currentUser != null)
-        {
-            currentUserId = currentUser.UserId;
-        }
-    }
+    int? currentUserId = ViewBag.CurrentUserId;
+    bool isAdmin = (Request.Cookies["UserRole"]?.Value == "Admin");
 
     bool isFavorite = Model.FavoritedBy?.Any(u => u.UserId == currentUserId) ?? false;
-    string heartClass = isFavorite ? "bi-heart-fill" : "bi-heart";
-
-    ViewBag.Title = "Post Details";
 
     var images = new List<string>();
     if (!string.IsNullOrEmpty(Model.ImagePath1)) { images.Add(Model.ImagePath1); }
@@ -75,45 +63,50 @@
         </button>
 
         @{
-            string buttonText = isFavorite ? "Remove from Favorites" : "Add to Favorites";
-            string isFavoriteAttr = isFavorite ? "true" : "false";
+            string favoriteButtonText = isFavorite ? "Remove from Favorites" : "Add to Favorites";
         }
 
         <span id="add-to-favorites"
               class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center cursor-pointer"
               data-post-id="@Model.Id"
-              data-is-favorite="@isFavoriteAttr">
-            @buttonText
+              data-is-favorite="@(isFavorite ? "true" : "false")">
+            @favoriteButtonText
         </span>
+
+        @if (isAdmin)
+        {
+            <button type="button"
+                    class="bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded ml-4"
+                    id="deletePostBtn"
+                    data-post-id="@Model.Id">
+                Delete Post
+            </button>
+        }
     </div>
 </div>
 
 <div class="modal fade" id="supportModal" tabindex="-1" role="dialog" aria-labelledby="supportModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h5 class="modal-title" id="supportModalLabel">Support the Author</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <form method="post" action="/Support/Support">
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="amount">Amount (₽):</label>
                         <input type="number" class="form-control" id="amount" name="Amount" required min="10">
                     </div>
-
                     <div class="form-group">
                         <label for="comment">Comment (optional):</label>
                         <textarea class="form-control" id="comment" name="Comment"></textarea>
                     </div>
-
                     <div class="form-group">
                         <label for="cardNumber">Card Number (16 digits):</label>
                         <input type="text" class="form-control" id="cardNumber" name="CardNumber" required maxlength="16" pattern="\d{16}" placeholder="0000 0000 0000 0000">
                     </div>
-
                     <div class="form-group">
                         <label for="expiryDate">Expiry Date:</label>
                         <div class="d-flex">
@@ -122,15 +115,12 @@
                             <input type="number" class="form-control" id="expiryYear" name="ExpiryYear" required maxlength="2" placeholder="YY" min="22" max="99" pattern="\d{2}" style="width: 80px;">
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label for="cvv">CVV:</label>
                         <input type="text" class="form-control" id="cvv" name="CVV" required maxlength="3" pattern="\d{3}" placeholder="123">
                     </div>
-
                     <input type="hidden" name="PostId" value="@Model.Id" />
                 </div>
-
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Support</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -150,11 +140,11 @@
             @using (Html.BeginForm("ReportPost", "Post", FormMethod.Post, new { id = "reportForm" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.Id) 
-                <input type="hidden" name="PostId" value="@Model.Id" /> // Добавьте это, чтобы явно создать поле с именем PostId
+                @Html.HiddenFor(m => m.Id)
+                <input type="hidden" name="PostId" value="@Model.Id" />
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="reason">Причина жалобы:</label>
+                        <label for="reason">Reason for report:</label>
                         <textarea class="form-control" id="reason" name="Reason" rows="5" required minlength="10" maxlength="500"></textarea>
                         @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
                     </div>
@@ -184,22 +174,31 @@
 
             const addToFavoritesBtn = document.getElementById("add-to-favorites");
             if (addToFavoritesBtn) {
-                addToFavoritesBtn.addEventListener("click", function () {
+                addToFavoritesBtn.addEventListener("click", async function () {
                     const btn = this;
                     const postId = btn.getAttribute("data-post-id");
                     const isFavorite = btn.getAttribute("data-is-favorite") === "true";
 
-                    fetch(`/Post/ToggleFavorite/${postId}`, {
-                        method: "POST"
-                    }).then(res => {
-                        if (res.ok) {
+                    try {
+                        const response = await fetch(`/Post/ToggleFavorite/${postId}`, {
+                            method: "POST",
+                            headers: {
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        });
+
+                        if (response.ok) {
                             const newState = !isFavorite;
                             btn.setAttribute("data-is-favorite", newState ? "true" : "false");
                             btn.textContent = newState ? "Remove from Favorites" : "Add to Favorites";
                         } else {
-                            alert("Something went wrong.");
+                            const errorData = await response.json();
+                            alert(`Error: ${errorData.message || "Something went wrong."}`);
                         }
-                    });
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                        alert('An error occurred while trying to change favorite status.');
+                    }
                 });
             }
 
@@ -208,7 +207,7 @@
                 reportForm.addEventListener("submit", function(e) {
                     const reasonInput = document.getElementById("reason");
                     if (reasonInput.value.length < 10 || reasonInput.value.length > 500) {
-                        alert("Причина жалобы должна быть от 10 до 500 символов.");
+                        alert("The reason for the complaint must be between 10 and 500 characters.");
                         e.preventDefault();
                     }
                 });
@@ -247,6 +246,37 @@
                     document.body.appendChild(overlay);
                 });
             });
+
+            const deletePostBtn = document.getElementById("deletePostBtn");
+            if (deletePostBtn) {
+                deletePostBtn.addEventListener('click', async function () {
+                    const postId = this.dataset.postId;
+                    if (confirm(`Are you sure you want to delete this post (ID: ${postId})? This action is irreversible and will delete all associated reports.`)) {
+                        try {
+                            const formData = new FormData();
+                            formData.append('id', postId);
+                            formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+
+                            const response = await fetch(`/Admin/DeletePost`, {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                                alert(data.message);
+                                window.location.href = '@Url.Action("Index", "Home")';
+                            } else {
+                                alert(`Error: ${data.message}`);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting post:', error);
+                            alert('An error occurred while trying to delete the post.');
+                        }
+                    }
+                });
+            }
         });
     </script>
 }

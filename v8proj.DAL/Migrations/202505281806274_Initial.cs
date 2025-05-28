@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreateNew : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -68,7 +68,7 @@
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Posts", t => t.ReportedPostId, cascadeDelete: true)
-                .ForeignKey("dbo.UserEfs", t => t.ReporterUserId, cascadeDelete: true)
+                .ForeignKey("dbo.UserEfs", t => t.ReporterUserId)
                 .Index(t => t.ReportedPostId)
                 .Index(t => t.ReporterUserId);
             

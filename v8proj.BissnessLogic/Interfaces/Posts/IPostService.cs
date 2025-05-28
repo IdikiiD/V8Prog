@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using v8proj.Core.Entities;
-using v8proj.Core.Entities.User; 
+using v8proj.Core.Entities.User;
+using v8proj.Web.Model.DTO;
 
 namespace v8proj.BissnessLogic.Interfaces.Posts 
 {
@@ -10,7 +12,8 @@ namespace v8proj.BissnessLogic.Interfaces.Posts
         Post GetPostById(int id); 
         void AddPost(Post post); 
         Post GetPostWithFavorites(int postId); 
-        UserEf GetUserWithFavorites(string userEmail); 
+        UserEf GetUserWithFavorites(string userEmail);
         void SaveChanges();
+        Task<BaseResponse<object>> DeletePost(int postId);
     }
 }

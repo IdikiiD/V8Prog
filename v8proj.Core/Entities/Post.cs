@@ -18,7 +18,7 @@ namespace v8proj.Core.Entities
         public DateTime CreatedAt { get; set; } 
         public virtual ICollection<UserEf> FavoritedBy { get; set; } = new List<UserEf>();
 
-
+        public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
        
 
        
