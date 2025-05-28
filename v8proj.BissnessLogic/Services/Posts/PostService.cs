@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity; 
@@ -16,6 +17,19 @@ namespace v8proj.BissnessLogic.Services.Posts
         {
             _context = context;
         }
+        
+        public IEnumerable<Post> SearchPosts(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+                return Enumerable.Empty<Post>();
+
+            return _context.Posts
+                .Where(p => p.Title.Contains(query))
+                .OrderBy(p => p.Title)
+                .Take(5)
+                .ToList();
+        }
+
 
         public List<Post> GetPostsFilteredAndSorted(string category)
         {
