@@ -33,6 +33,21 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+          <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+        </Reference>
+        <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+          <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+        </Reference>
+        <Reference Include="ExpressMapper, Version=1.9.1.0, Culture=neutral, PublicKeyToken=ac363faa09311ba0, processorArchitecture=MSIL">
+          <HintPath>..\packages\Expressmapper.1.9.1\lib\net46\ExpressMapper.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+          <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+          <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.4\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+        </Reference>
         <Reference Include="mscorlib" />
         <Reference Include="System"/>
         <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -45,6 +60,9 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Constant\TempDataKeys.cs" />
+        <Compile Include="Entities\Post.cs" />
+        <Compile Include="Entities\Report.cs" />
+        <Compile Include="Entities\Support.cs" />
         <Compile Include="Entities\User\UserEF.cs" />
         <Compile Include="Enums\Entinity\EntityStatus.cs" />
         <Compile Include="Enums\Response\Response.cs" />
@@ -53,18 +71,21 @@
         <Compile Include="Enums\User\SignUpStatus.cs" />
         <Compile Include="Enums\User\UserType.cs" />
         <Compile Include="Interface\GenericRep\IGenericRepository.cs" />
+        <Compile Include="Interface\Report\IreportRepository.cs" />
+        <Compile Include="Interface\Support\ISupportRepository.cs" />
         <Compile Include="Interface\User\IUserRepository.cs" />
         <Compile Include="Model\DTO\GenericResponse\BaseResponse.cs" />
+        <Compile Include="Model\DTO\Report\CreateReport.cs" />
+        <Compile Include="Model\DTO\Report\ReportViewDto.cs" />
         <Compile Include="Model\DTO\User\SignInDto.cs" />
         <Compile Include="Model\DTO\User\SignUpDto.cs" />
         <Compile Include="Model\DTO\User\UserDto.cs" />
         <Compile Include="Model\eUseControl.cs" />
+        <Compile Include="Model\ViewModels\HomeViewModel.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Model\ViewModels\" />
-    </ItemGroup>
-    <ItemGroup>
+      <None Include="App.config" />
       <None Include="packages.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>

@@ -1,45 +1,157 @@
-﻿@{
+﻿                                                                                                                                                                                       @{
     Layout = null;
 }
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <base href="/"/>
+
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - V8 Performance</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-@{
-    var userRole = Request.Cookies["UserRole"]?.Value ?? "Guest";
-}
 
-@if (userRole == "Admin")
-{
-    @Html.Partial("~/Views/Shared/_AdminerHeader.cshtml") <!-- Полный путь -->
-}
-else
-{
-    @Html.Partial("~/Views/Shared/_Header.cshtml") <!-- Полный путь -->
-}
-
-    <main>
-        @RenderBody()
-    </main>
-
-    <footer class="bg-white shadow-lg mt-8">
-        @Html.Partial("_Footer")
-    </footer>
-
-    <script>
-        document.getElementById('profileBtn').addEventListener('click', () => {
-            document.getElementById('profileModal').classList.remove('hidden');
-        });
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
+    <style>
+        body {
+            background-image: url('@Url.Content("~/Content/Images/fon.jpg")');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
         }
-    </script>
+
+        /* Эффект увеличения при наведении */
+        .click-to-enlarge {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .click-to-enlarge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+    </style>
+
+
+    <style>
+        .post-item {
+            width: 250px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    @Html.AntiForgeryToken()
+
+</head>
+<body class="flex flex-col min-h-screen">
+@Html.Partial("_Header")
+
+<main class="flex-grow">
+    @RenderBody()
+</main>
+
+<footer class="bg-[rgba(0,0,0,0.3)] mt-auto border-t border-gray-200 shadow-[0_-15px_10px_-15px_rgba(0,0,0,0.1)]">
+    <div class="container mx-auto px-4 py-6">
+        <div class="text-center text-white">
+            &copy; @DateTime.Now.Year - V8 Performance. Все права защищены.
+        </div>
+    </div>
+</footer>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+@RenderSection("Scripts", required: false)
+
+<script>
+    let images = document.querySelectorAll('.click-to-enlarge');
+    let overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    overlay.style.display = 'none';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '9999';
+    document.body.appendChild(overlay);
+
+    images.forEach(img => {
+        img.addEventListener('click', function () {
+            let largeImage = document.createElement('img');
+            largeImage.src = img.src;
+            largeImage.style.maxWidth = '90%';
+            largeImage.style.maxHeight = '90%';
+            largeImage.style.borderRadius = '10px';
+            largeImage.style.objectFit = 'contain';
+            overlay.innerHTML = '';
+            overlay.appendChild(largeImage);
+            overlay.style.display = 'flex';
+        });
+    });
+
+    overlay.addEventListener('click', function () {
+        overlay.style.display = 'none';
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileBtn = document.getElementById('profileBtn');
+        if (profileBtn) {
+            profileBtn.addEventListener('click', () => {
+                const profileModal = document.getElementById('profileModal');
+                if (profileModal) {
+                    profileModal.classList.remove('hidden');
+                }
+            });
+        }
+
+        window.closeModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
-

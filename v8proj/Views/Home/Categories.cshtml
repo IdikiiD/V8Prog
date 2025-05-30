@@ -1,0 +1,47 @@
+
+@{
+    ViewBag.Title = "Категории";
+}
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold text-center mb-8">Выберите категорию</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+        <!-- Легковые -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden text-center p-5">
+            <a href="@Url.Action("Cars", "Home")">
+                <img src="https://avatars.mds.yandex.net/get-vertis-journal/4220003/sedan_1.png_1662553722403/1098x1098"
+                     alt="Легк" class="w-full h-40 object-cover">
+                <h2 class="text-xl font-bold mt-4">🚗 Легковые</h2>
+            </a>
+        </div>
+
+        <!-- Внедорожники -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden text-center p-5">
+            <a href="@Url.Action("SUVs", "Home")">
+                <img src="https://avatars.mds.yandex.net/get-vertis-journal/4469561/krossover.png_1662553857320/1098x1098"
+                     alt="Внедорожники" class="w-full h-40 object-cover">
+                <h2 class="text-xl font-bold mt-4">🚙 Внедорожники</h2>
+            </a>
+        </div>
+
+        <!-- Спорткары -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden text-center p-5">
+            <a href="@Url.Action("SportsCars", "Home")">
+                <img src="https://avatars.mds.yandex.net/get-vertis-journal/4465444/kupe.png_1662553801715/1098x1098"
+                     alt="Спорткары" class="w-full h-40 object-cover">
+                <h2 class="text-xl font-bold mt-4">🏎 Спорткары</h2>
+            </a>
+        </div>
+
+        <!-- Мотоциклы -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden text-center p-5">
+            <a href="@Url.Action("Motorcycles", "Home")">
+                <img src="https://i.pinimg.com/736x/83/8e/d1/838ed13b659d1296d5d8421a4e321366.jpg"
+                     alt="Мотоциклы" class="w-full h-40 object-cover">
+                <h2 class="text-xl font-bold mt-4">🏍 Мотоциклы</h2>
+            </a>
+        </div>
+    </div>
+</div>
+S

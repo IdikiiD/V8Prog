@@ -1,59 +1,54 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Web.Mvc;
 using v8proj.Web.Model;
+using v8proj.Web.Model.ViewModels;
+using v8proj.Core.Entities; 
+using v8proj.BissnessLogic.Interfaces.Home;
+using v8proj.BissnessLogic.Services.Home;
 
 namespace v8proj.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        
+
+        private readonly IHomeService _homeService; 
+
+        
+        public HomeController(IHomeService homeService)
         {
-            List<eUseControl> cars = new List<eUseControl>
+            _homeService = homeService;
+        }
+
+        public ActionResult Index(string category)
+        {
+        
+            var cars = _homeService.GetCars();
+            var posts = _homeService.GetPosts(category);
+
+            foreach (var post in posts)
             {
-                new eUseControl { CartName = "Mercedes", CartDescription = "Good car", CartPrice = 10000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "BMW", CartDescription = "Sporty and powerful", CartPrice = 12000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" },
-                new eUseControl { CartName = "Audi", CartDescription = "Luxury and comfort", CartPrice = 15000, CartImage = "https://via.placeholder.com/400x300" }
+                if (string.IsNullOrEmpty(post.ImagePath1))
+                {
+                    post.ImagePath1 = "/Content/Uploads/Posts/no-image.png"; 
+                }
+            }
+
+            var viewModel = new HomeViewModel
+            {
+                Cars = cars,
+                Posts = posts
             };
 
-            return View(cars); // ✅ Передаем список
+            return View(viewModel);
         }
         
-        public ActionResult Cart()
-        {
-            return View();
-        }
-
-        public ActionResult SignUp()
-        {
-            return View("~/Views/Auth/SignUp.cshtml");
-        }
-        
-
-        public ActionResult SignIn()
-        {
-            return View("~/Views/Auth/SignIn.cshtml");
-        }
-        
-        public ActionResult Setings()
-        {
-            return View();
-        }
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-        
-        public ActionResult Profile()
-        {
-            return View("~/Views/Profile/Profile.cshtml");
-        }
-        
-        public ActionResult ProductManagment()
-        {
-            return View("~/Views/AdminView/ProductManagment.cshtml");
-        }
-
+        public ActionResult Cart() => View();
+        public ActionResult SignUp() => View("~/Views/Auth/SignUp.cshtml");
+        public ActionResult SignIn() => View("~/Views/Auth/SignIn.cshtml");
+        public ActionResult Setings() => View();
+        public ActionResult ForgotPassword() => View();
+        public ActionResult Profile() => View("~/Views/Profile/Profile.cshtml");
+        public ActionResult ProductManagment() => View("~/Views/Admin/ProductManagment.cshtml");
     }
 }

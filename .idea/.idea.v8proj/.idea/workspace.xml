@@ -7,15 +7,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="added new directory in BussinessLogic">
-      <change afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_AdminerHeader.cshtml" afterDir="false" />
+    <list default="true" id="61324a9d-d5cc-4bb3-95e8-f3d364a35dda" name="Changes" comment="">
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/v8proj/Controllers/ProductDescriptionsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/v8proj/Views/Home/Categories.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v8proj/Controllers/AuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Controllers/AuthController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj.DAL/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj.DAL/ApplicationDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v8proj/Views/AdminView/ProductManagment/ProductManagment.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/AdminView/ProductManagment.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_AdminLayout.cshtml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Shared/_Header.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Shared/_Header.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/v8proj/Views/Web.config" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/Views/Web.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/v8proj/v8proj.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/v8proj/v8proj.csproj" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.v8proj/.idea/workspace.xml" afterDir="false" />
+>>>>>>> f110cf5b9ee2e726d19da04895f584d0f1a563a7
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +29,13 @@
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -43,15 +55,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$APPLICATION_HOME_DIR$/lib/app.jar!/resources/html5-schema/html5/common.rnc" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/620f6e7eba834c42a2f2db6b22950df6531838/01/ae383003/Object.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/620f6e7eba834c42a2f2db6b22950df6531838/20/40322529/DateTime.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/0a/e58fc1ac/LabelExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/12/9cfa7b30/UrlHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/1e/cbd16cc7/WebViewPage`1.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/39/71fec76b/Controller.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/8a/636bcd40/InputExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c11f3b1e27ba4255a48f3fa4d01496ab861d8/ce/309cf3ba/ValidationExtensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e47d419785d848bd8b716ba35b561ae5329e8/0d/a82d739c/WebPageBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="jar://$APPLICATION_HOME_DIR$/lib/app.jar!/resources/html5-schema/html5/phrase.rnc" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -66,9 +70,14 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;.NET Project.v8proj - IIS Express.executor&quot;: &quot;Run&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+<<<<<<< Updated upstream
     &quot;git-widget-placeholder&quot;: &quot;demo&quot;,
+=======
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+>>>>>>> Stashed changes
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -119,6 +128,24 @@
       <workItem from="1741906777993" duration="3304000" />
       <workItem from="1742031858429" duration="36793000" />
       <workItem from="1742505732162" duration="8537000" />
+<<<<<<< Updated upstream
+      <workItem from="1743586404144" duration="447000" />
+      <workItem from="1744022212436" duration="1808000" />
+      <workItem from="1744024201055" duration="1140000" />
+      <workItem from="1744025355997" duration="1392000" />
+<<<<<<< HEAD
+=======
+      <workItem from="1743361766627" duration="2955000" />
+      <workItem from="1743419185323" duration="2965000" />
+      <workItem from="1743422862837" duration="1149000" />
+      <workItem from="1743426683822" duration="136000" />
+>>>>>>> Stashed changes
+=======
+      <workItem from="1746444388132" duration="16000" />
+      <workItem from="1746444984343" duration="164000" />
+      <workItem from="1746445243048" duration="2167000" />
+      <workItem from="1746521975773" duration="212000" />
+>>>>>>> f110cf5b9ee2e726d19da04895f584d0f1a563a7
     </task>
     <task id="LOCAL-00001" summary="Changed all , project works , all links works , we need just add new features">
       <option name="closed" value="true" />

@@ -19,11 +19,22 @@ namespace v8proj.Core.Model.DTO.User
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         [StringLength(255, MinimumLength = 1, ErrorMessage = "Email must be less than 320 characters")]
         public string Email { get; set; }
+        public string FirstName { get; set; }  
+        public string LastName { get; set; }   
+        public string AvatarUrl { get; set; }  
         
         public DateTime DateRegistered { get; set; }
         public UserType UserType { get; set; }
         public EntityStatus UserStatus { get; set; }
         public AccountVerificationStatus IsVerified { get; set; }
         public SignUpForLettersStatus IsSignUpForLetters { get; set; }
+        public string PhoneNumber { get; set; }
+
+        
+
+        
+        
+        
+       
     }
-}   
+}

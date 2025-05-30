@@ -1,0 +1,22 @@
+@{
+    ViewBag.Title = "Thank You";
+}
+
+<div class="container mx-auto py-8 text-center">
+    @if (!string.IsNullOrEmpty(ViewBag.SupportMessage as string))
+    {
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
+            <strong class="font-bold text-6xl block mb-4">Success! &#x2764;</strong>
+            <span class="block text-lg">@ViewBag.SupportMessage</span>
+        </div>
+    }
+    else
+    {
+        <h2 class="text-2xl font-semibold mb-4">Thank You! &#x2764;</h2>
+    }
+
+    <p class="mb-6">Your support is very important to the author.</p>
+    <a href="@Url.Action("Index", "Home")" class="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-block">
+        Back to Home
+    </a>
+</div>

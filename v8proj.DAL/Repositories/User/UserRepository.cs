@@ -2,13 +2,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using ExpressMapper;
 using v8proj.Core.Entities.User;
 using v8proj.Core.Enums.User;
 using v8proj.Core.Interface.User;
 
 namespace v8proj.DAL.Repositories.User
-
 {
     public class UsersRepository : IUsersRepository
     {
@@ -27,16 +25,37 @@ namespace v8proj.DAL.Repositories.User
         public async Task<UserEf> GetByIdAsync(int id) =>
             await _context.Users.FindAsync(id);
 
-        public async Task<UserEf> GetByEmailAsync(string email) => 
+        public async Task<UserEf> GetByEmailAsync(string email) =>
             await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
 
-        public async Task<IEnumerable<UserEf>> GetPaginatedUsersByEmailAndTypeAsync(string email, UserType userType, int page, int pageSize)
+        public async Task<IEnumerable<UserEf>> GetPaginatedUsersBySearchTermAndTypeAsync(string searchTerm, UserType userType, int page, int pageSize)
         {
-            var request = _context.Users.AsQueryable();
-            if (!string.IsNullOrEmpty(email)) request = request.Where(x => x.Email.Contains(email));
-            if (userType != UserType.None) request = request.Where(x => x.UserType == userType);
+            var query = _context.Users.AsQueryable();
 
-            return await request.OrderByDescending(x => x.UserId).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            if (userType != UserType.None)
+            {
+                query = query.Where(x => x.UserType == userType);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                string searchTermLower = searchTerm.ToLower();
+                query = query.Where(x => x.FullName.ToLower().Contains(searchTermLower) ||
+                             x.Email.ToLower().Contains(searchTermLower));
+            }
+
+            // Явно проверяем, есть ли элементы, прежде чем применять Skip и Take
+            if (await query.AnyAsync())
+            {
+                return await query.OrderByDescending(x => x.UserId)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
+            }
+            else
+            {
+                return new List<UserEf>(); // Возвращаем пустой список.
+            }
         }
 
         public async Task<UserEf> UpdateAsync(UserEf entity)
@@ -44,7 +63,10 @@ namespace v8proj.DAL.Repositories.User
             var existingUser = await _context.Users.FindAsync(entity.UserId);
             if (existingUser == null) return null;
 
-            Mapper.Map(entity, existingUser);
+            existingUser.FullName = entity.FullName;
+            existingUser.Email = entity.Email; 
+            existingUser.UserType = entity.UserType;
+            existingUser.UserStatus = entity.UserStatus;
 
             await _context.SaveChangesAsync();
             return existingUser;

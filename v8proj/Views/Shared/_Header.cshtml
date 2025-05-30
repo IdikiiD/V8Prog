@@ -1,21 +1,32 @@
-﻿<header class="bg-white shadow-md">
+﻿<header class="bg-white/20 rounded-md rounded-bl-md rounded-br-md shadow-md backdrop-blur-sm">
+    
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center">
-            <img src="~/images/car-logo.svg" alt="Logo" class="h-8 w-8 mr-2">
             <h1 class="text-2xl font-bold text-black hover:text-gray-700">V8</h1>
         </div>
+
         <nav class="flex items-center space-x-6">
-            <a href="@Url.Action("Index", "Home")" class="text-black hover:text-gray-700">Каталог</a>
-            <a href="@Url.Action("Cart", "Home")" class="text-black hover:text-gray-700">Корзина</a>
+            <a href="@Url.Action("Index", "Home")" class="text-black hover:text-gray-700">Главная</a>
+            <a class="text-black hover:text-gray-300" href="@Url.Action("Categories", "Categories")">Категории</a>
+            <a href="@Url.Action("Favorites", "Post")" class="text-black hover:text-gray-700">Избранное</a>
+
             @if (Request.Cookies["UserEmail"] != null)
             {
-                <a href="@Url.Action("Profile", "Home")" class="text-black hover:text-gray-700">Профиль</a>
+                <a href="@Url.Action("Index", "Profile")" class="text-black hover:text-gray-700">Профиль</a>
+          
+                if (Request.Cookies["UserRole"]?.Value == "Admin")
+                {
+                    <a href="@Url.Action("Dashboard", "Admin")" class="px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded hover:bg-red-700">Dashboard</a>
+                }
+
+                <a href="@Url.Action("SignOut", "Auth")" class="text-black hover:text-gray-700">Выход</a>
             }
             else
             {
-                <a href="@Url.Action("SignIn", "Home")" class="text-black hover:text-gray-700">Вход</a>
+                <a href="@Url.Action("SignIn", "Auth")" class="text-black hover:text-gray-700">Вход</a>
+                <a href="@Url.Action("SignUp", "Auth")" class="text-black hover:text-gray-700">Регистрация</a>
             }
-            <a href="@Url.Action("Setings", "Home")" class="text-black hover:text-gray-700">Настройки</a>
+
         </nav>
     </div>
 </header>

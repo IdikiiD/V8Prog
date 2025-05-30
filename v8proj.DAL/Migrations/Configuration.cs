@@ -10,7 +10,8 @@ namespace v8proj.DAL.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false; 
+            ContextKey = "v8proj.DAL.ApplicationDbContext"; 
         }
     } 
 }
